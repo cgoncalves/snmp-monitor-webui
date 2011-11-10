@@ -1,68 +1,45 @@
 <?php
-
-require_once('config.php');
-
-$db_conn = mysql_connect($db_host, $db_user, $db_password);
-mysql_select_db($db_name, $db_conn);
-
-if (!$db_conn) {
-	error_log('Unable to connect to server: ' . mysql_error());
-	die ('Unable to connect to server: ' . mysql_error());
+if (!isset($_GET["p"])) {
+	$p = 'pages/home.php';
 }
-
-$result_servers = mysql_query("SELECT Id, Name, IP FROM servers", $db_conn);
-$result_services = mysql_query("SELECT Id, Name FROM services", $db_conn);
-
-if (!$result_servers && !$result_services && !$result_servers_services) {
-	error_log('Unable to query database server: ' . mysql_error());
-	die ('Unable to query database server');
+else {
+	$p = $_GET['p'];
+	if (empty($p) || $p == "home")
+		$p = 'pages/home.php';
+	elseif($p == "add_server")
+		$p = 'pages/add_server.php';
+	elseif($p == "add_metric")
+		$p = 'pages/add_metric.php';
+	elseif($p == "add_server_metric")
+		$p = 'pages/add_server_metric.php';
+	else
+		$p = 'pages/404.php';
 }
-
-
-echo "
-<h2>SERVER STATUS</h1>
-<table border='2' cellspacing='1'>
-	<tr>
-		<td><strong>ID</strong></td>
-		<td><strong>Name</strong></td>
-		<td><strong>IP</strong></td>";
-
-	while ($row_services = mysql_fetch_object($result_services)) {
-		echo "<td><strong>$row_services->Name</strong></td>";
-	}
-
-echo "
-	</tr>
-";
-
-mysql_data_seek($result_services, 0);
-
-while ($row = mysql_fetch_object($result_servers)) {
-	echo "
-		<tr>
-			<td>$row->Id</td>
-			<td>$row->Name</td>
-			<td>$row->IP</td>";
-
-	while ($row_services = mysql_fetch_object($result_services)) {
-		$result_server_service = mysql_query("SELECT Status, RefIDService FROM servers_services WHERE RefIDServer=$row->Id");
-		while ($row_server_service = mysql_fetch_object($result_server_service)) {
-			if ($row_server_service->RefIDService == $row_services->Id) {
-				echo "<td>$row_server_service->Status</td>";
-			}
-			else {
-				echo "<td>N/A</td>";
-			}
-		}
-	}
-
-	echo "
-		</tr>
-	";
-}
-echo "</table>";
-
-
-mysql_close($db_conn);
-
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MGIRS</title>
+<link rel="stylesheet" type="text/css" href="resources/view.css" media="all">
+<script type="text/javascript" src="resources/view.js"></script>
+
+</head>
+<body id="main_body" >
+	<center>
+		<ul id="list-nav">
+			<li><a href="?p=home">Home</a></li>
+			<li><a href="?p=servers">Servers</a></li>
+			<li><a href="?p=metrics">Metrics</a></li>
+			<li><a href="?p=add_server">Add Server</a></li>
+			<li><a href="?p=add_metric">Add Metric</a></li>
+		</ul>
+	</center>
+	<img id="top" src="images/top.png" alt="" />
+	<div id="form_container">
+		<h1>Untitled Form</h1>
+		<?php require_once($p) ?>
+	</div>
+	<img id="bottom" src="images/bottom.png" alt="" />
+	</body>
+</html>
