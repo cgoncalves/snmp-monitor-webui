@@ -6,6 +6,7 @@ $db_user = 'girs';
 $db_password = 'girs1112';
 
 $plugins_dir = 'plugins/';
-$rrd_dir = 'rdd/';
+$rrd_dir = 'rrd/';
+$graphs_dir = 'graphs/';
 
 ?>
