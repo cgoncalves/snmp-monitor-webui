@@ -10,10 +10,16 @@ else {
 		$p = 'pages/add_server.php';
 	elseif($p == "add_metric")
 		$p = 'pages/add_metric.php';
+	elseif($p == "add_notification")
+		$p = 'pages/add_notification.php';
 	elseif($p == "add_server_metric")
 		$p = 'pages/add_server_metric.php';
+  elseif($p == "add_server_notification")
+		$p = 'pages/add_server_notification.php';
   elseif($p == "servers")
-		$p = 'pages/servers_monitoring.php';
+		$p = 'pages/servers.php';
+  elseif($p == "servers_monitoring")
+		$p = 'servers_monitoring.php';
 	else
 		$p = 'pages/404.php';
 }
@@ -35,6 +41,10 @@ else {
 			<li><a href="?p=metrics">Metrics</a></li>
 			<li><a href="?p=add_server">Add Server</a></li>
 			<li><a href="?p=add_metric">Add Metric</a></li>
+			<li><a href="?p=add_notification">Add Notification</a></li>
+      <li><a href="?p=add_server_metric">Add Metric to Server</a></li>
+      <li><a href="?p=add_server_notification">Add Notification to Server</a></li>
+      <li><a href="?p=servers_monitoring">Monitoring Test</a></li>
 		</ul>
 	</center>
 	<img id="top" src="images/top.png" alt="" />
