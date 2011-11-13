@@ -12,6 +12,8 @@ else {
 		$p = 'pages/add_metric.php';
 	elseif($p == "add_server_metric")
 		$p = 'pages/add_server_metric.php';
+  elseif($p == "servers")
+		$p = 'pages/servers_monitoring.php';
 	else
 		$p = 'pages/404.php';
 }
