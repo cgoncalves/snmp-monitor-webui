@@ -6,7 +6,7 @@
 	{
 		if(is_null($server_id) || !is_integer($server_id) || $server_id < 1 || is_null($metric_id) || !is_integer($metric_id) || $metric_id < 1 || empty($data_type) || !is_string($data_type))
 			return FALSE;
-		
+
 		// Heartbeat (in seconds)
 		if(!empty($step_value) && is_integer($step_value))
 		{

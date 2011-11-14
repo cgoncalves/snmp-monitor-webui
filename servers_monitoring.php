@@ -11,7 +11,7 @@
 	  die ('Unable to connect to server: ' . mysql_error());
   }
 
-  $result_servers = mysql_query("SELECT Id, Name, IP FROM servers");
+  $result_servers = mysql_query("SELECT Id, Name, IP FROM servers", $db_conn);
 
   if (!$result_servers) {
 	  error_log('Unable to query database server: ' . mysql_error());
@@ -57,28 +57,31 @@
         updateRRD($server->Id, $metric->Id, time(), $value);
 
         // Checks the thresholds
+        $max1 = $server_metric->Threshold_max1;
+        $max2 = $server_metric->Threshold_max2;
+        $min1 = $server_metric->Threshold_min1;
+        $min2 = $server_metric->Threshold_min2;
 
-        if($value > $server_metric->Threshold_max1 || $value > $server_metric->Threshold_max2 || $value < $server_metric->Threshold_min1 || $value < $server_metric->Threshold_min2)
+        if(($max2 > -1 && $value > $max2) || ($min2 > -1 && $value < $min2) || ($max1 > -1 && $value > $max1) || ($min1 > -1 && $value < $min1))
         {
-
           // Status is updated to CRITICAL if value exceeds threshold 2 max or is lower than the threshold 2 min
-          if($value > $server_metric->Threshold_max2 || $value > $server_metric->Threshold_min2)
+          if(($max2 > -1 && $value > $max2) || ($min2 > -1 && $value < $min2))
           {
             if($server_metric->Status != "CRITICAL")
               updateStatus($server_metric->Id, "CRITICAL");
           }
           // Status is updated to WARNING if value exceeds threshold 1 max or is lower than the threshold 1 min
-          elseif($value > $server_metric->Threshold_max1 || $value > $server_metric->Threshold_min1)
+          elseif(($max1 > -1 && $value > $max1) || ($min1 > -1 && $value < $min1))
           {
             if($server_metric->Status != "WARNING")
               updateStatus($server_metric->Id, "WARNING");
           } 
 
           // Adds the event to the events log
-          addEventLog($server->Id, $server_metric->RefIDMetric, $oid, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $value);
+          addEventLog($server->Id, $server_metric->RefIDMetric, $oid, $min1, $min2, $max1, $max2, $value);
 
           // Sends a notification to the admin about this event
-          sendNotification($server->Id, $server->IP, $server->Name, $metric->Name, $oid, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $value);
+          sendNotification($server->Id, $server->IP, $server->Name, $metric->Name, $oid, $min1, $min2, $max1, $max2, $value);
         }
         else
         {
@@ -93,7 +96,6 @@
           updateStatus($server_metric->Id, "ERROR");
       }
 	  }
-
   }
   mysql_close($db_conn);
 

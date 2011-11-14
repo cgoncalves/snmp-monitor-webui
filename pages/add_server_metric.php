@@ -1,5 +1,6 @@
 <?
 require_once('config.php');
+include("rrd.php");
 
 $db_conn = mysql_connect($db_host, $db_user, $db_password);
 
@@ -17,6 +18,13 @@ if (isset($_POST["submit"])) {
 	if (!mysql_query($sql,$db_conn)) {
 		die('Error: ' . mysql_error());
 	}
+  
+  $metric = mysql_query("SELECT DataType FROM metrics WHERE Id=$_POST[refidmetric]");
+  $metric = mysql_fetch_object($metric);
+  $server = mysql_query("SELECT Periodicity FROM servers WHERE Id=$_POST[refidserver]");
+  $server = mysql_fetch_object($server);
+
+  createRRD($_POST[refidserver], $_POST[refidmetric], $metric->DataType, $server->Periodicity);
 
 	mysql_close($db_conn);
 	

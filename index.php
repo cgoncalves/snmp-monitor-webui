@@ -18,6 +18,8 @@ else {
 		$p = 'pages/add_server_notification.php';
   elseif($p == "servers")
 		$p = 'pages/servers.php';
+  elseif($p == "events_log")
+		$p = 'pages/events_log.php';
   elseif($p == "servers_monitoring")
 		$p = 'servers_monitoring.php';
 	else
@@ -44,6 +46,7 @@ else {
 			<li><a href="?p=add_notification">Add Notification</a></li>
       <li><a href="?p=add_server_metric">Add Metric to Server</a></li>
       <li><a href="?p=add_server_notification">Add Notification to Server</a></li>
+      <li><a href="?p=events_log">Events log</a></li>
       <li><a href="?p=servers_monitoring">Monitoring Test</a></li>
 		</ul>
 	</center>
