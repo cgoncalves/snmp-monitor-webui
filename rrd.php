@@ -4,26 +4,34 @@
 		 Returns TRUE on sucess or FALSE on failure. */
 	function createRRD($server_id, $metric_id, $data_type, $step_value)
 	{
-		if(is_null($server_id) || !is_integer($server_id) || $server_id < 1 || is_null($metric_id) || !is_integer($metric_id) || $metric_id < 1 || empty($data_type) || !is_string($data_type))
+		if(is_null($server_id) || intval($server_id) < 1 || is_null($metric_id) || intval($metric_id) < 1 || empty($data_type) || !is_string($data_type))
 			return FALSE;
 
-		// Heartbeat (in seconds)
-		if(!empty($step_value) && is_integer($step_value))
+		if(!empty($step_value))
 		{
 			$options[0] = "--step";
 			$options[1] = $step_value;
-			$heartbeat = $step_value * 2;
 		}
 		else
-		{
-			$heartbeat = 300 * 2;	// default step is 300 seconds (5 min)
-		}
+      $step_value = 300;  // default step is 300 seconds (5 min)
+
+		// Heartbeat (in seconds)
+		$heartbeat = intval($step_value) * 2;	
 		
 		// Data Source (min and max Unknown)	
 		$options[2] = "DS:metric:$data_type:$heartbeat:U:U";
 		
 		// Steps and rows for RRA's of 1 hour, 1 day, 1 month and 1 year
-		$steps_rows = array(array("1", "12"), array("12", "24"), array("288", "30"), array("8640", "12"));
+		$steps_1h = 1;
+    $rows_1h = 60*60/$step_value;
+    $steps_1day = $rows_1h;
+    $rows_1day = 24*60*60/($steps_1day*$step_value);
+    $steps_1month = $rows_1day;
+    $rows_1month = 30*24*60*60/($steps_1month*$step_value);
+    $steps_1year = $rows_1day;
+    $rows_1year = 365*30*24*60*60/($steps_1year*$step_value);
+
+    $steps_rows = array(array($steps_1h, $rows_1h), array($steps_1day, $rows_1day), array($steps_1month, $rows_1month), array($steps_1year, $rows_1year));
 		
 		// Round Robin Archives (CF = AVERAGE, xff = 0.5, steps and rows dfined in array $steps_rows)
 		for($i = 0; $i < sizeof($steps_rows); $i++)
@@ -39,7 +47,7 @@
 		 Returns TRUE on sucess or FALSE on failure. */
 	function updateRRD($server_id, $metric_id, $timestamp, $value)
 	{
-		if(is_null($server_id) || !is_integer($server_id) || $server_id < 1 || is_null($metric_id) || !is_integer($metric_id) || $metric_id < 1 || is_null($value) || !is_integer($value))
+		if(is_null($server_id) || intval($server_id) < 1 || is_null($metric_id) || intval($metric_id) < 1 || is_null($value))
 			return FALSE;
 		
 		if(is_null($timestamp) || (is_integer($timestamp) && $timestamp < 0) || (is_string($timestamp) && $timestamp != "N"))
@@ -55,12 +63,12 @@
 		 Returns an array with information about the generated image or FALSE on failure. */
 	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $colour)
 	{
-		if(is_null($server_id) || !is_integer($server_id) || $server_id < 1 || is_null($metric_id) || !is_integer($metric_id) || $metric_id < 1 || empty($colour) || !is_string($colour) || $colour[0] != '#' || strlen($colour) != 7)
+		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1 || empty($colour) || !is_string($colour) || $colour[0] != '#' || strlen($colour) != 7)
 			return FALSE;
 		
 		$i = 0;
 		
-		if(!is_null($start) && is_integer($start))
+		if(!is_null($start))
 		{
 			$options[0] = "--start";
 			$options[1] = $start;

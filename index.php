@@ -1,9 +1,11 @@
 <?php
-if (!isset($_GET["p"])) {
+
+if (!isset($_REQUEST["p"])) {
 	$p = 'pages/home.php';
 }
 else {
-	$p = $_GET['p'];
+	$p = $_REQUEST['p'];
+
 	if (empty($p) || $p == "home")
 		$p = 'pages/home.php';
 	elseif($p == "add_server")
@@ -25,6 +27,7 @@ else {
 	else
 		$p = 'pages/404.php';
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

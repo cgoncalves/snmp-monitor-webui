@@ -15,6 +15,8 @@ if (isset($_POST["submit"])) {
 	$sql = "INSERT INTO servers_metrics (RefIDServer, RefIDMetric, Threshold_max1, Threshold_max2, Threshold_min1, Threshold_min2, Status)
 		VALUES ('$_POST[refidserver]', '$_POST[refidmetric]', '$_POST[threshold_max1]', '$_POST[threshold_max2]', '$_POST[threshold_min1]', '$_POST[threshold_min2]', 'UNKNOWN')";
 
+echo $sql;
+
 	if (!mysql_query($sql,$db_conn)) {
 		die('Error: ' . mysql_error());
 	}
@@ -24,10 +26,10 @@ if (isset($_POST["submit"])) {
   $server = mysql_query("SELECT Periodicity FROM servers WHERE Id=$_POST[refidserver]");
   $server = mysql_fetch_object($server);
 
-  createRRD($_POST[refidserver], $_POST[refidmetric], $metric->DataType, $server->Periodicity);
+  $ret = createRRD($_POST["refidserver"], $_POST["refidmetric"], $metric->DataType, $server->Periodicity);
 
 	mysql_close($db_conn);
-	
+
 	header("Location: index.php");
 }
 
@@ -39,7 +41,7 @@ $result_metrics = mysql_query($sql_metrics);
 
 ?>
 
-<form id="form_287843" class="appnitro"  method="post" action="">
+<form id="form_287843" class="appnitro" method="post" action="">
 	<div class="form_description">
 		<h2>Server-Metric</h2>
 		<p>Associate a metric to a server</p>
@@ -91,7 +93,7 @@ $result_metrics = mysql_query($sql_metrics);
 		</li>
 		<li class="buttons">
 			<input type="hidden" name="form_id" value="287843" />
-			<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
+			<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit"/>
 		</li>
 	</ul>
 </form>	

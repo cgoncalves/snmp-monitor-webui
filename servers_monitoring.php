@@ -2,6 +2,7 @@
 
   require_once('config.php');
   include("rrd.php");
+  include("notification.php");
 
   $db_conn = mysql_connect($db_host, $db_user, $db_password);
   mysql_select_db($db_name, $db_conn);
@@ -52,9 +53,19 @@
           $value = floatval($value);
         else
           $value = intval($value);
-
+echo "<br><br> $server->Id, $metric->Id, " . time() . ", $value<br><br>";
         // Adds the obtained value to the RRD of the pair (server, metric)
-        updateRRD($server->Id, $metric->Id, time(), $value);
+        $ret = updateRRD($server->Id, $metric->Id, time(), $value);
+
+if($ret == FALSE)
+{
+  $err = rrd_error();
+  if(!is_null($err))
+    print "Error ocurred: $err<br>";
+  print "Not updated!<br>";
+}
+else
+  print "Updated!<br>";
 
         // Checks the thresholds
         $max1 = $server_metric->Threshold_max1;
@@ -110,40 +121,5 @@
   {
     $ret = mysql_query("INSERT INTO eventlogs (RefIDServer, IDMetric, OID, Threshold_min1, Threshold_min2, Threshold_max1, Threshold_max2, Value, Ack) VALUES ('$server_id', '$metric_id', '$oid', '$min1', '$min2', '$max1', '$max2', $value, '0')");
   }
-
-  function sendNotification($server_id, $server_ip, $server_name, $metric_name, $oid, $threshold_min1, $threshold_min2, $threshold_max1, $threshold_max2, $value)
-  {
-    $notifications = mysql_query("SELECT RefIdNotification, Receiver FROM servers_notifications WHERE RefIDServer=$server_id");
-    while($notification = mysql_fetch_object($notifications))
-    {
-      $notification_name = mysql_query("SELECT Name FROM notifications WHERE ID=$notification->RefIdNotification");
-      $name = mysql_fetch_object($notification_name);
-
-      if($name->Name == "E-mail")
-      {
-        $to = $notification->Receiver;
-        $subject = "Monitoring Event";
-
-        $message = "Metric \"$metric_name\" ($oid) of server \"$server_name\" ($server_ip)";
-        if($value > $threshold_max2)
-          $message .= " has exceeded threshold max 2 of $threshold_max2";
-        elseif($value > $threshold_max1)
-          $message .= " has exceeded threshold max 1 of $threshold_max1";
-        elseif($value < $threshold_min2)
-          $message .= " is lower than threshold min 2 of $threshold_min2";
-        elseif($value > $threshold_min2)
-          $message .= " is lower than threshold min 1 of $threshold_min1";
-        $message .=  " (value = $value)";
-
-        $from = "monitor@girs.com";
-        $headers = "From: " . $from;
-
-        if(mail($to, $subject, $message, $headers))
-          echo "<br><br>Mail sent!";
-        else
-          echo "<br><br>Mail not sent!";
-      }
-    }   
-  } 
 
 ?>
