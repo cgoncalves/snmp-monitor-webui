@@ -53,9 +53,9 @@
             $command .= "2>&1";
         }
 
-echo "<br><br><br>$command<br><br><br>";
         $ret = shell_exec($command);
-        $ret = explode($ret, " ");
+        $ret = explode(" ", $ret);
+
         $oid = $ret[0];
         $value = intval($ret[1]);
       }
@@ -96,7 +96,7 @@ echo "<br><br><br>$command<br><br><br>";
           addEventLog($server->Id, $server_metric->RefIDMetric, $oid, $min1, $min2, $max1, $max2, $value);
 
           // Sends a notification to the admin about this event
-          sendNotification($server, $metric->Name, $oid, $min1, $min2, $max1, $max2, $value);
+          sendNotification($server->Id, $server->IP, $server->Name, $metric->Name, $oid, $min1, $min2, $max1, $max2, $value);
         }
         else
         {

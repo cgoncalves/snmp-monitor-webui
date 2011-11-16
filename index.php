@@ -18,8 +18,6 @@ else {
 		$p = 'pages/add_server_metric.php';
   elseif($p == "add_server_notification")
 		$p = 'pages/add_server_notification.php';
-  elseif($p == "servers")
-		$p = 'pages/servers.php';
   elseif($p == "events_log")
 		$p = 'pages/events_log.php';
   elseif($p == "graphs")
@@ -46,16 +44,14 @@ else {
 	<center>
 		<ul id="list-nav">
 			<li><a href="?p=home">Home</a></li>
-			<li><a href="?p=servers">Servers</a></li>
-			<li><a href="?p=metrics">Metrics</a></li>
 			<li><a href="?p=add_server">Add Server</a></li>
 			<li><a href="?p=add_metric">Add Metric</a></li>
 			<li><a href="?p=add_notification">Add Notification</a></li>
       <li><a href="?p=add_server_metric">Add Metric to Server</a></li>
       <li><a href="?p=add_server_notification">Add Notification to Server</a></li>
-      <li><a href="?p=events_log">Events log</a></li>
-      <li><a href="?p=graphs">Graphs</a></li>
       <li><a href="?p=status">Status</a></li>
+      <li><a href="?p=graphs">Graphs</a></li>
+      <li><a href="?p=events_log">Events log</a></li>
       <li><a href="?p=servers_monitoring">Monitoring Test</a></li>
 		</ul>
 	</center>

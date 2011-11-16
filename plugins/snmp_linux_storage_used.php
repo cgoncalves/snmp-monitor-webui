@@ -6,7 +6,7 @@
   if(!empty($ret))
   {
     $used = explode(" ", $ret);
-    $used = $size[sizeof($used) - 1];
+    $used = $used[sizeof($used) - 1];
   }
 
   $oid = "1.3.6.1.2.1.25.2.3.1.4.$argv[2]";

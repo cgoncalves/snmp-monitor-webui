@@ -43,7 +43,7 @@
       $max1 = $event->Threshold_max1;
       $max2 = $event->Threshold_max2;
 
-      sendNotification($server, $metric_name, $oid, $min1, $min2, $max1, $max2, $value);
+      sendNotification($server->Id, $server->IP, $server->Name, $metric_name, $oid, $min1, $min2, $max1, $max2, $value);
     }
   }
 
