@@ -1,5 +1,29 @@
 <META HTTP-EQUIV=Refresh CONTENT="300">
 
+<script>
+  function getQuerystring(key, default_)
+  {
+    if (default_==null) default_=""; 
+    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+    var qs = regex.exec(window.location.href);
+    if(qs == null)
+      return default_;
+    else
+      return qs[1];
+  }
+  
+  function selectOnclickServer(form)
+  {
+    location = "?p=graphs&sid="+form.server.value;
+  }
+  
+  function selectOnclickMetric(form)
+  {
+    location = "?p=graphs&sid="+getQuerystring('sid')+"&mid="+form.metric.value;
+  }
+</script>
+
 <?php
 
   require_once('config.php');
@@ -27,17 +51,23 @@
 		<li id="li_1" >
 			<label class="description" for="element_1">Server:</label>
 			<div>
-				<select name="server">
+				<select name="server" onclick="selectOnclickServer(this.form);">
 				<?php while ($row = mysql_fetch_object($result_servers)) {
 					echo "<option value=$row->Id>$row->Name</option>";
 				} ?>
 				</select>
 			</div> 
 		</li>
+<?php
+
+  if (isset($_GET['sid']))
+  {
+?>
+
     <li id="li_2" >
 			<label class="description" for="element_2">Metric:</label>
 			<div>
-				<select name="metric">
+				<select name="metric" onclick="selectOnclickMetric(this.form);">
 				<?php while ($row = mysql_fetch_object($result_metrics)) {
 					echo "<option value=$row->Id>$row->Name</option>";
 				} ?>
@@ -46,36 +76,18 @@
 		</li>
     <li class="buttons">
 			<input type="hidden" name="form_id" value="287843" />
-			<input id="show" class="button_text" type="submit" name="submit" value="Show"/>
 		</li>
 	</ul>
 </form>	
 
 <?php
-
-  $server_id = -1;
-  $metric_id = -1;
-
-  if (isset($_POST["server"]) || isset($_POST["metric"])) {
-
-    if (isset($_POST["server"]))
-      $server_id = $_POST["server"];
-    if ( isset($_POST["metric"]))
-      $metric_id = $_POST["metric"];
   }
-  
-  if($server_id == -1)
-  {
-    $result_servers = mysql_query("SELECT Id, Name FROM servers");
-    $row = mysql_fetch_object($result_servers);
-    $server_id = $row->Id;
-  }
-  if($metric_id == -1)
-  {
-    $result_metrics = mysql_query("SELECT Id, Name FROM metrics");
-    $row = mysql_fetch_object($result_metrics);
-    $metric_id = $row->Id;
-  }
+
+  if ( !isset($_GET['sid']) || !isset($_GET['mid']) )
+    return;
+
+  $server_id = $_GET['sid'];
+  $metric_id = $_GET['mid'];
 
   $metric = mysql_query("SELECT Name, Unit FROM metrics WHERE Id=$metric_id");
   $metric = mysql_fetch_object($metric);
