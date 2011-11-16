@@ -1,9 +1,7 @@
+<script type="text/javascript" src="resources/update_acks.js"></script>
 <?php
 
   require_once('config.php');
-
-  if(isset($_POST['submit']))
-     update();
 
   $db_conn = mysql_connect($db_host, $db_user, $db_password);
   mysql_select_db($db_name, $db_conn);
@@ -70,25 +68,16 @@
       else
         echo "<td>N/A</td>";
       
-      if($row->Ack == 0)
-        echo "<td><input type=\"checkbox\" name=\"ack$row->Id\" /></td>";
-      elseif($row->Ack == 1)
-        echo "<td><input type=\"checkbox\" name=\"ack$row->Id\" checked=\"checked\" /></td>";
+      if ($row->Ack)
+	echo "<td><input name=\"chk\" type=\"checkbox\" id=\"chk_$row->Id\" value=\"$row->Id\" checked=\"yes\" onclick=\"chkit($row->Id, this.checked);\" /></td>";
+      else
+	echo "<td><input name=\"chk\" type=\"checkbox\" id=\"chk_$row->Id\" value=\"$row->Id\" onclick=\"chkit($row->Id, this.checked);\" /></td>";
 
-		  echo "</tr>";
+       echo "</tr>";
     }
   }
   echo "</table>";
 
   mysql_close($db_conn);
 
-  function update()
-  {
-
-  }
-
 ?>
-
-<form action="" method="post">
-  <input type="submit" name="submit" value="Update">
-</form>
