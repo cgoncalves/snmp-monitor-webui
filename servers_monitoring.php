@@ -37,35 +37,39 @@
       // Executes the plugin for this metric
       if($plugin_name[0] == "snmp")
       {
-        if($params[1] == "%IP")     
-          $ret = shell_exec("./$plugins_dir" . $params[0] . " " . $server->IP . " 2>&1");
+        for($i = 0; $i < sizeof($params); $i++)
+        {
+          if($params[$i] == "%IP")
+            $args[$i] = $server->IP;
+          else
+            $args[$i] = $params[$i];
+        }        
+  
+        $command = "php $plugins_dir" . $args[0] . ".php ";
+        for($i = 0; $i < sizeof($args); $i++)
+        { 
+          $command .= $args[$i] . " ";
+          if($i == sizeof($args) - 1)
+            $command .= "2>&1";
+        }
+
+echo "<br><br><br>$command<br><br><br>";
+        $ret = shell_exec($command);
+        $ret = explode($ret, " ");
+        $oid = $ret[0];
+        $value = intval($ret[1]);
+      }
+      else
+      {
+        $value = shell_exec("php $plugins_dir" . $params[0] . ".php 2>&1");
       }
 
-      // Gets the metric value from the string returned by the plugin,
-      // updates the RRD and checks the thresholds, updating the status if necessary
-      if(!is_null($ret) && is_string($ret) && !empty($ret) )
+      // Updates the RRD with the value returned by the plugin
+      // and checks the thresholds, updating the status if necessary
+      if(!is_null($value))
       {
-        $value = explode(" ", $ret);
-        $oid = $value[0];
-        $value = $value[sizeof($value) - 1];
-
-        if(sizeof(explode(".", $value)) > 1)
-          $value = floatval($value);
-        else
-          $value = intval($value);
-echo "<br><br> $server->Id, $metric->Id, " . time() . ", $value<br><br>";
         // Adds the obtained value to the RRD of the pair (server, metric)
         $ret = updateRRD($server->Id, $metric->Id, time(), $value);
-
-if($ret == FALSE)
-{
-  $err = rrd_error();
-  if(!is_null($err))
-    print "Error ocurred: $err<br>";
-  print "Not updated!<br>";
-}
-else
-  print "Updated!<br>";
 
         // Checks the thresholds
         $max1 = $server_metric->Threshold_max1;

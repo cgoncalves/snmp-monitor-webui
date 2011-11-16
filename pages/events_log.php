@@ -67,6 +67,8 @@
         echo "<td>Min 2 = $min2</td>";
       elseif($value < $min1)
         echo "<td>Min 1 = $min1</td>";
+      else
+        echo "<td>N/A</td>";
       
       if($row->Ack == 0)
         echo "<td><input type=\"checkbox\" name=\"ack$row->Id\" /></td>";
