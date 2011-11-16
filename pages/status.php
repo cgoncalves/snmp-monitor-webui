@@ -57,22 +57,75 @@
   $server_id = -1;
   $metric_id = -1;
 
-  $show = isset($_POST["submit"]);
-  $show_all = isset($_POST["submitAll"]);
+  if(isset($_POST["submitAll"]))
+      showAll($result_servers, $result_metrics);
+  else
+  {
+    if (isset($_POST["server"]) || isset($_POST["metric"])) {
 
-  if($show_all)
-  { 
+      if (isset($_POST["server"]))
+        $server_id = $_POST["server"];
+      if ( isset($_POST["metric"]))
+        $metric_id = $_POST["metric"];
+    }
+    
+    if($server_id == -1)
+    {
+      $result_servers = mysql_query("SELECT Id, Name FROM servers");
+      $row = mysql_fetch_object($result_servers);
+      $server_id = $row->Id;
+    }
+    if($metric_id == -1)
+      $metric_id = 0;
+
+    showServer($server_id, $metric_id, $result_metrics);
+  }
+
+  mysql_close($db_conn);
+
+  function showAll($result_servers, $result_metrics)
+  {
     mysql_data_seek($result_servers, 0);
+
     while($server = mysql_fetch_object($result_servers))
     {
-      echo "<p><strong>" . $server->Name . "</strong></p>
-      <table border='2' cellspacing='1' cellpadding='5'>";
+      echo "<p><strong>" . $server->Name . "</strong></p>";
+      metrics_status($server->Id, $result_metrics);
+    }
+  }
 
+  function showServer($server_id, $metric_id, $result_metrics)
+  {
+    $server = mysql_query("SELECT Name FROM servers WHERE Id=$server_id");
+    $server = mysql_fetch_object($server);
+
+    echo "<p><strong>" . $server->Name . "</strong></p>";
+
+    if($metric_id > 0)
+    {
+      $metric = mysql_query("SELECT Name FROM metrics WHERE Id=$metric_id");
+      $metric = mysql_fetch_object($metric);
+
+      $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric_id");
+      $server_metric = mysql_fetch_object($server_metric);
+      
+      echo "<p>$metric->Name: $server_metric->Status</p>";
+    }
+    elseif($metric_id == 0)
+    {
+      metrics_status($server_id, $result_metrics);
+    }
+  }
+
+  function metrics_status($server_id, $result_metrics)
+  {
+      echo "<table border='2' cellspacing='1' cellpadding='5'>";
       mysql_data_seek($result_metrics, 0);
+
       while($metric = mysql_fetch_object($result_metrics))
       {
         echo "<tr>";
-        $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server->Id AND RefIdMetric=$metric->Id");
+        $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
         $server_metric = mysql_fetch_object($server_metric);
 
         echo "<td>" . $metric->Name . "</td>";
@@ -84,41 +137,8 @@
 
         </tr>";
       }
-      
+
       echo "</table>";
-    }
-  } 
-  if (isset($_POST["server"]) || isset($_POST["metric"])) {
-
-    if (isset($_POST["server"]))
-      $server_id = $_POST["server"];
-    if ( isset($_POST["metric"]))
-      $metric_id = $_POST["metric"];
-  }
-  
-  if($server_id == -1)
-  {
-    $result_servers = mysql_query("SELECT Id, Name FROM servers");
-    $row = mysql_fetch_object($result_servers);
-    $server_id = $row->Id;
-  }
-  if($metric_id == -1)
-  {
-    $result_metrics = mysql_query("SELECT Id, Name FROM metrics");
-    $row = mysql_fetch_object($result_metrics);
-    $metric_id = $row->Id;
   }
 
-  if($metric_id > 0)
-  {
-    $metric = mysql_query("SELECT Name, Unit FROM metrics WHERE Id=$metric_id");
-    $metric = mysql_fetch_object($metric);
-  }
-  elseif($metric_id == 0)
-  {
-    $metrics = mysql_query("SELECT Name, Unit FROM metrics");
-    $metrics = mysql_fetch_object($metrics);
-  }
-
-  mysql_close($db_conn);
 ?>

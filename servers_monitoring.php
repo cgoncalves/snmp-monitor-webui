@@ -92,7 +92,7 @@ else
           addEventLog($server->Id, $server_metric->RefIDMetric, $oid, $min1, $min2, $max1, $max2, $value);
 
           // Sends a notification to the admin about this event
-          sendNotification($server->Id, $server->IP, $server->Name, $metric->Name, $oid, $min1, $min2, $max1, $max2, $value);
+          sendNotification($server, $metric->Name, $oid, $min1, $min2, $max1, $max2, $value);
         }
         else
         {

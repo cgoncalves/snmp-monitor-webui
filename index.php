@@ -22,6 +22,10 @@ else {
 		$p = 'pages/servers.php';
   elseif($p == "events_log")
 		$p = 'pages/events_log.php';
+  elseif($p == "graphs")
+		$p = 'pages/graphs.php';
+  elseif($p == "status")
+		$p = 'pages/status.php';
   elseif($p == "servers_monitoring")
 		$p = 'servers_monitoring.php';
 	else
@@ -50,6 +54,8 @@ else {
       <li><a href="?p=add_server_metric">Add Metric to Server</a></li>
       <li><a href="?p=add_server_notification">Add Notification to Server</a></li>
       <li><a href="?p=events_log">Events log</a></li>
+      <li><a href="?p=graphs">Graphs</a></li>
+      <li><a href="?p=status">Status</a></li>
       <li><a href="?p=servers_monitoring">Monitoring Test</a></li>
 		</ul>
 	</center>

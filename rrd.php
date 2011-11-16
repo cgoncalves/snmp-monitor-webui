@@ -65,7 +65,7 @@
 	{
 		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1 || empty($colour) || !is_string($colour) || $colour[0] != '#' || strlen($colour) != 7)
 			return FALSE;
-		
+
 		$i = 0;
 		
 		if(!is_null($start))
@@ -75,17 +75,20 @@
 			$i = 2;
 		}
 		
-		$options[0 + $i] = "--vertical-label";
-		$options[1 + $i] = $units;
-		$options[2 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id) . ":metric:AVERAGE";
-		$options[3 + $i] = "LINE1:variable$colour:$metric_name\\r";
-		$options[4 + $i] = "COMMENT:\\r";
-		$options[5 + $i] = "GPRINT:variable:AVERAGE:Avg $metric_name\: %.2lf %S$units\\r";
-		$options[6 + $i] = "GPRINT:variable:MIN:Min $metric_name\: %.2lf %S$units\\r";
-		$options[7 + $i] = "GPRINT:variable:MAX:Max $metric_name\: %.2lf %S$units\\r";
-		
-		return rrd_graph(filenameGraph($server_id, $metric_id), $options, count($options));
-	}
+		$options[0 + $i] = "--vertical-label=$units";
+		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
+		$options[2 + $i] = "LINE1:variable$colour:$metric_name\\r";
+		$options[3 + $i] = "COMMENT:\\r";
+
+    if($units == "%")
+      $units = "%%";
+
+		$options[4 + $i] = "GPRINT:variable:AVERAGE:Avg $metric_name\: %.2lf %S$units\\r";
+		$options[5 + $i] = "GPRINT:variable:MIN:Min $metric_name\: %.2lf %S$units\\r";
+		$options[6 + $i] = "GPRINT:variable:MAX:Max $metric_name\: %.2lf %S$units\\r";
+
+		return rrd_graph(filenameGraph($server_id, $metric_id, $start), $options, count($options));
+  } 
 	
 	function filenameRRD($server_id, $metric_id)
 	{
@@ -95,11 +98,11 @@
 		return $rrd_dir . $server_id . "_$metric_id.rrd";
 	}
 	
-	function filenameGraph($server_id, $metric_id)
+	function filenameGraph($server_id, $metric_id, $start)
 	{
 		require('config.php');
 	
 		// Filename is "graphs/<serverID_metricID>.png"
-		return $graphs_dir . $server_id . "_$metric_id.png";
+		return $graphs_dir . $server_id . "_" . $metric_id . "_" . $start . ".png";
 	}
 ?>
