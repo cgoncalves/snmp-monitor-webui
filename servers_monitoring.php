@@ -44,7 +44,7 @@
       }        
 
       $command = "php $plugins_dir" . $args[0] . ".php ";
-      for($i = 0; $i < sizeof($args); $i++)
+      for($i = 1; $i < sizeof($args); $i++)
       { 
         $command .= $args[$i] . " ";
         if($i == sizeof($args) - 1)
@@ -52,10 +52,22 @@
       }
 
       $ret = shell_exec($command);
-      $ret = explode(" ", $ret);
 
-      $oid = $ret[0];
-      $value = intval($ret[1]);
+echo "<br><br>"; 
+for($i = 0; $i < sizeof($params); $i++)
+echo $args[$i] . " ";
+echo "<br>$command";
+echo "<br>$ret<br><br>";
+      if($plugin_name[0] == "snmp")
+      {
+        $ret = explode(" ", $ret);
+
+        $oid = $ret[0];
+        $value = intval($ret[1]);
+      }
+      else
+        $value = $ret;
+
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
