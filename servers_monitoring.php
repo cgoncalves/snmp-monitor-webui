@@ -35,34 +35,27 @@
       $plugin_name = explode("_", $params[0]);
 
       // Executes the plugin for this metric
-      if($plugin_name[0] == "snmp")
+      for($i = 0; $i < sizeof($params); $i++)
       {
-        for($i = 0; $i < sizeof($params); $i++)
-        {
-          if($params[$i] == "%IP")
-            $args[$i] = $server->IP;
-          else
-            $args[$i] = $params[$i];
-        }        
-  
-        $command = "php $plugins_dir" . $args[0] . ".php ";
-        for($i = 0; $i < sizeof($args); $i++)
-        { 
-          $command .= $args[$i] . " ";
-          if($i == sizeof($args) - 1)
-            $command .= "2>&1";
-        }
+        if($params[$i] == "%IP")
+          $args[$i] = $server->IP;
+        else
+          $args[$i] = $params[$i];
+      }        
 
-        $ret = shell_exec($command);
-        $ret = explode(" ", $ret);
+      $command = "php $plugins_dir" . $args[0] . ".php ";
+      for($i = 0; $i < sizeof($args); $i++)
+      { 
+        $command .= $args[$i] . " ";
+        if($i == sizeof($args) - 1)
+          $command .= "2>&1";
+      }
 
-        $oid = $ret[0];
-        $value = intval($ret[1]);
-      }
-      else
-      {
-        $value = shell_exec("php $plugins_dir" . $params[0] . ".php 2>&1");
-      }
+      $ret = shell_exec($command);
+      $ret = explode(" ", $ret);
+
+      $oid = $ret[0];
+      $value = intval($ret[1]);
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary

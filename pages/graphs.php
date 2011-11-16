@@ -1,4 +1,4 @@
-<META HTTP-EQUIV=Refresh CONTENT="5">
+<META HTTP-EQUIV=Refresh CONTENT="300">
 
 <?php
 

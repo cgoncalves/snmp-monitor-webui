@@ -77,7 +77,7 @@
 		
 		$options[0 + $i] = "--vertical-label=$units";
 		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
-		$options[2 + $i] = "LINE1:variable$colour:$metric_name\\r";
+		$options[2 + $i] = "LINE2:variable$colour:$metric_name\\r";
 		$options[3 + $i] = "COMMENT:\\r";
 
     if($units == "%")

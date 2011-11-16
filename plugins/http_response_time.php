@@ -1,7 +1,7 @@
 <?php
 
   $port = 80;
-  $ret = shell_exec("nmap -p $port www.ua.pt 2>&1");
+  $ret = shell_exec("nmap -p $port $argv[1] 2>&1");
 
   if(!empty($ret))
   {
