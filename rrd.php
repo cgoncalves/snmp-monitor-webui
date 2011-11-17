@@ -77,15 +77,42 @@
 		
 		$options[0 + $i] = "--vertical-label=$units";
 		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
-		$options[2 + $i] = "LINE2:variable$colour:$metric_name\\r";
-		$options[3 + $i] = "COMMENT:\\r";
+    
+    $i += 2;
+
+    if($threshold1 > -1)
+    {
+      $options[0+$i] = "HRULE:$threshold1#FF0000";
+      $i++;
+    }
+
+    if($threshold2 > -1)
+    {
+        $options[0+$i] = "HRULE:$threshold2#FF0000";
+        $i++;
+    }
+
+    if($threshold3 > -1)
+    {
+        $options[0+$i] = "HRULE:$threshold3#FF0000";
+        $i++;
+    }
+
+    if($threshold4 > -1)
+    {
+        $options[0+$i] = "HRULE:$threshold4#FF0000";
+        $i++;
+    }
+
+		$options[0 + $i] = "LINE2:variable$colour:$metric_name\\r";
+		$options[1 + $i] = "COMMENT:\\r";
 
     if($units == "%")
       $units = "%%";
 
-		$options[4 + $i] = "GPRINT:variable:AVERAGE:Avg $metric_name\: %.2lf %S$units\\r";
-		$options[5 + $i] = "GPRINT:variable:MIN:Min $metric_name\: %.2lf %S$units\\r";
-		$options[6 + $i] = "GPRINT:variable:MAX:Max $metric_name\: %.2lf %S$units\\r";
+		$options[2 + $i] = "GPRINT:variable:AVERAGE:Avg $metric_name\: %.2lf %S$units\\r";
+		$options[3 + $i] = "GPRINT:variable:MIN:Min $metric_name\: %.2lf %S$units\\r";
+		$options[4 + $i] = "GPRINT:variable:MAX:Max $metric_name\: %.2lf %S$units\\r";
 
 		return rrd_graph(filenameGraph($server_id, $metric_id, $start), $options, count($options));
   } 
