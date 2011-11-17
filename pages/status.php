@@ -120,7 +120,7 @@
         $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
         $server_metric = mysql_fetch_object($server_metric);
 
-        echo "<td>" . $metric->Name . "</td>";
+        echo "<td><a href=\"?p=graphs&sid=$server_id&mid=$metric->Id\">" . $metric->Name . "</a></td>";
         
         if(!is_null($server_metric->Status))
           echo"<td>" . $server_metric->Status ."</td>";

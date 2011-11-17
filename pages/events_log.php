@@ -22,7 +22,7 @@
 
   echo "
   <h2>Events log</h1>
-  <table border='2' cellspacing='1'>
+  <table border='2' cellspacing='1 cellpadding='5'>
     <tr>
 		  <td><strong>Server Name (IP)</strong></td>
 		  <td><strong>Metric (OID)</strong></td>
