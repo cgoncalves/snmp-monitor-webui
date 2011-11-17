@@ -21,6 +21,6 @@
   if(!is_null($used) && !is_null($units))
     $value = intval($used) * intval($units);
 
-  echo NULL . " $value";
+  echo "-1 $value";
 
 ?>

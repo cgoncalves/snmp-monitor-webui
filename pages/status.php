@@ -1,4 +1,4 @@
-<META HTTP-EQUIV=Refresh CONTENT="60">
+<META HTTP-EQUIV=Refresh CONTENT="300">
 
 <script>
   function selectOnclickServer(form)

@@ -21,6 +21,6 @@
   if(!is_null($total) && !is_null($avail))
     $value = intval($total) - intval($avail);
 
-  echo NULL . " $value";
+  echo "-1 $value";
 
 ?>

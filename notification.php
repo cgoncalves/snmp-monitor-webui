@@ -18,7 +18,10 @@
         }
         else
         {
-          $message = "Metric \"$metric_name\" ($oid) of server \"$server_name\" ($server_ip)";
+          $message = "Metric \"$metric_name\"";
+          if($oid != -1)
+            $message .= "($oid)";
+          $message .= " of server \"$server_name\" ($server_ip)";
           if($value > $threshold_max2)
             $message .= " has exceeded threshold max 2 of $threshold_max2";
           elseif($value > $threshold_max1)

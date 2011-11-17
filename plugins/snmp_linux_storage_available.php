@@ -30,6 +30,6 @@
   if(!is_null($size) && !is_null($used) && !is_null($units))
     $value = (intval($size) - intval($used)) * intval($units);
 
-  echo NULL . " $value";
+  echo "-1 $value";
 
 ?>

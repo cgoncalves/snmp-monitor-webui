@@ -1,3 +1,5 @@
+<META HTTP-EQUIV=Refresh CONTENT="300">
+
 <script type="text/javascript" src="resources/update_acks.js"></script>
 <?php
 
@@ -54,8 +56,10 @@
 	    echo "
 		    <tr>
 			    <td>$server_name<br>($server_ip)</td>
-          <td>$metric_name<br>($row->OID)</td>
-          <td>$value</td>";
+          <td>$metric_name";
+          if($row->OID != -1)
+            echo "<br>($row->OID)</td>";
+          echo "<td>$value</td>";
 
       if($value > $max2)
         echo "<td>Max 2 = $max2</td>";
