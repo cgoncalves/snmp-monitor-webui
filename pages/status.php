@@ -1,5 +1,11 @@
 <META HTTP-EQUIV=Refresh CONTENT="60">
 
+<script>
+  function selectOnclickServer(form)
+  {
+    location = "?p=status&sid="+form.server.value;
+  }
+</script>
 <?php
 
   require_once('config.php');
@@ -26,41 +32,30 @@
 		<li id="li_1" >
 			<label class="description" for="element_1">Server:</label>
 			<div>
-				<select name="server">
+				<select name="server" onclick="selectOnclickServer(this.form);">
 				<?php while ($row = mysql_fetch_object($result_servers)) {
 					echo "<option value=$row->Id>$row->Name</option>";
 				} ?>
 				</select>
 			</div> 
 		</li>
-    <li id="li_2" >
-			<label class="description" for="element_2">Metric:</label>
-			<div>
-				<select name="metric">
-           <option value=0>All</option>
-				  <?php while ($row = mysql_fetch_object($result_metrics)) {
-					  echo "<option value=$row->Id>$row->Name</option>";
-				  } ?>
-				</select>
-			</div> 
-		</li>
     <li class="buttons">
 			<input type="hidden" name="form_id" value="287843" />
-			<input id="show" class="button_text" type="submit" name="submit" value="Show"/>
       <input id="showAll" class="button_text" type="submit" name="submitAll" value="Show All Servers"/>
 		</li>
 	</ul>
 </form>	
 
 <?php
-
-  $server_id = -1;
-  $metric_id = -1;
-
   if(isset($_POST["submitAll"]))
-      showAll($result_servers, $result_metrics);
-  else
   {
+      showAll($result_servers, $result_metrics);
+  }
+  else if ( isset($_REQUEST['sid']) )
+  {
+    $server_id = $_GET['sid'];
+    $metric_id = -1;
+
     if (isset($_POST["server"]) || isset($_POST["metric"])) {
 
       if (isset($_POST["server"]))
@@ -78,9 +73,14 @@
     if($metric_id == -1)
       $metric_id = 0;
 
-    showServer($server_id, $metric_id, $result_metrics);
-  }
+    $result_metrics = mysql_query("SELECT metrics.Id, metrics.Name FROM metrics
+                                   INNER JOIN servers_metrics AS SM ON SM.RefIDMetric=metrics.Id
+                                   WHERE SM.RefIDServer=$server_id"
+                                 );
 
+    showServer($server_id, $result_metrics);
+  }
+  
   mysql_close($db_conn);
 
   function showAll($result_servers, $result_metrics)
@@ -89,38 +89,30 @@
 
     while($server = mysql_fetch_object($result_servers))
     {
+      $result_metrics = mysql_query("SELECT metrics.Id, metrics.Name FROM metrics
+                                     INNER JOIN servers_metrics AS SM ON SM.RefIDMetric=metrics.Id
+                                     WHERE SM.RefIDServer=$server->Id"
+                                   );
+
       echo "<p><strong>" . $server->Name . "</strong></p>";
       metrics_status($server->Id, $result_metrics);
     }
   }
 
-  function showServer($server_id, $metric_id, $result_metrics)
+  function showServer($server_id, $result_metrics)
   {
     $server = mysql_query("SELECT Name FROM servers WHERE Id=$server_id");
     $server = mysql_fetch_object($server);
 
     echo "<p><strong>" . $server->Name . "</strong></p>";
 
-    if($metric_id > 0)
-    {
-      $metric = mysql_query("SELECT Name FROM metrics WHERE Id=$metric_id");
-      $metric = mysql_fetch_object($metric);
-
-      $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric_id");
-      $server_metric = mysql_fetch_object($server_metric);
-      
-      echo "<p>$metric->Name: $server_metric->Status</p>";
-    }
-    elseif($metric_id == 0)
-    {
-      metrics_status($server_id, $result_metrics);
-    }
+    metrics_status($server_id, $result_metrics);
   }
 
   function metrics_status($server_id, $result_metrics)
   {
       echo "<table border='2' cellspacing='1' cellpadding='5'>";
-      mysql_data_seek($result_metrics, 0);
+      //mysql_data_seek($result_metrics, 0);
 
       while($metric = mysql_fetch_object($result_metrics))
       {
