@@ -10,7 +10,7 @@
 
       $notification = mysql_fetch_object($notification);
 
-      if($notification->Name == "E-mail")
+      if( (strcmp($notification->Name, "E-mail")) || (strcmp($notification->Name, "Email")) )
       {
         if($metric_name == "Trap")
         {
@@ -42,7 +42,7 @@
   {
     if(valid_email($to))
     {
-        $from = "aprocha@ua.pt";
+        $from = "girs";
         $headers = "From: " . $from;
 
         if(!mail($to, $subject, wordwrap($message, 70), $headers))

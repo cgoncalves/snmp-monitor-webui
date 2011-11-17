@@ -40,7 +40,10 @@
 			<div>
 				<select name="server" onclick="selectOnclickServer(this.form);">
 				<?php while ($row = mysql_fetch_object($result_servers)) {
-					echo "<option value=$row->Id>$row->Name</option>";
+					if (isset($_GET['sid']) && $_GET['sid'] == $row->Id)
+						echo "<option value=$row->Id selected=\"yes\">$row->Name</option>";
+					else
+						echo "<option value=$row->Id>$row->Name</option>";
 				} ?>
 				</select>
 			</div> 
@@ -62,7 +65,10 @@
                                                                  WHERE SM.RefIDServer=$server_id"
                                                                );
                                   while ($row = mysql_fetch_object($result_metrics)) {
-					echo "<option value=$row->Id>$row->Name</option>";
+					if (isset($_GET['mid']) && $_GET['mid'] == $row->Id)
+						echo "<option value=$row->Id selected=\"yes\">$row->Name</option>";
+					else
+						echo "<option value=$row->Id>$row->Name</option>";
 				  }
                                 ?>
 				</select>
@@ -77,7 +83,7 @@
 <?php
   }
 
-  if ( !isset($_GET['sid']) || !isset($_GET['mid']) )
+  if ( !isset($_GET['sid']) || !isset($_GET['mid']) || empty($_GET['mid']) )
     return;
 
   $server_id = $_GET['sid'];

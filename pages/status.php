@@ -34,7 +34,10 @@
 			<div>
 				<select name="server" onclick="selectOnclickServer(this.form);">
 				<?php while ($row = mysql_fetch_object($result_servers)) {
-					echo "<option value=$row->Id>$row->Name</option>";
+					if (isset($_GET['sid']) && $_GET['sid'] == $row->Id)
+						echo "<option value=$row->Id selected=\"yes\">$row->Name</option>";
+					else
+						echo "<option value=$row->Id>$row->Name</option>";
 				} ?>
 				</select>
 			</div> 
