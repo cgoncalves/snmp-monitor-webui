@@ -41,25 +41,19 @@ else {
 
 </head>
 <body id="main_body" >
-	<center>
-		<ul id="list-nav">
-			<li><a href="?p=home">Home</a></li>
-			<li><a href="?p=add_server">Add Server</a></li>
-			<li><a href="?p=add_metric">Add Metric</a></li>
-			<li><a href="?p=add_notification">Add Notification</a></li>
-      <li><a href="?p=add_server_metric">Add Metric to Server</a></li>
-      <li><a href="?p=add_server_notification">Add Notification to Server</a></li>
+  <center>
+    <ul id="list-nav">
+      <li><a href="?p=home">Home</a></li>
       <li><a href="?p=status">Status</a></li>
       <li><a href="?p=graphs">Graphs</a></li>
       <li><a href="?p=events_log">Events log</a></li>
-      <li><a href="?p=servers_monitoring">Monitoring Test</a></li>
-		</ul>
-	</center>
-	<img id="top" src="images/top.png" alt="" />
-	<div id="form_container">
-		<h1>Untitled Form</h1>
-		<?php require_once($p) ?>
-	</div>
-	<img id="bottom" src="images/bottom.png" alt="" />
-	</body>
+    </ul>
+  </center>
+  <img id="top" src="images/top.png" alt="" />
+  <div id="form_container">
+    <h1>Untitled Form</h1>
+    <?php require_once($p) ?>
+  </div>
+  <img id="bottom" src="images/bottom.png" alt="" />
+</body>
 </html>
