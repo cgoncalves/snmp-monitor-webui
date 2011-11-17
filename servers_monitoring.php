@@ -42,7 +42,7 @@
           $args[$i] = $params[$i];
       }        
 
-      $command = "php $plugins_dir" . $args[0] . ".php ";
+      $command = "$plugins_dir" . $args[0] . " ";
       for($i = 1; $i < sizeof($args); $i++)
       { 
         $command .= $args[$i] . " ";
@@ -62,8 +62,6 @@
       }
       else
         $value = $ret;
-
-echo "<br>$value<br>";
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
