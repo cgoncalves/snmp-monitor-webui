@@ -3,7 +3,7 @@
 <?php
 
   $oid = "1.3.6.1.4.1.2021.4.3.0";
-  $ret = shell_exec("snmpget -v 1 -c public $argv[1] $oid 2>&1");
+  $ret = shell_exec("snmpget -O en -v 1 -c public $argv[1] $oid 2>&1");
 
   if(!empty($ret))
   {
@@ -12,7 +12,7 @@
   }
 
   $oid = "1.3.6.1.4.1.2021.4.4.0";
-  $ret = shell_exec("snmpget -v 1 -c public $argv[1] $oid 2>&1");
+  $ret = shell_exec("snmpget -O en -v 1 -c public $argv[1] $oid 2>&1");
 
   if(!empty($ret))
   {
