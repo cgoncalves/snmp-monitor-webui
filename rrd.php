@@ -61,7 +61,7 @@
 
 	/* Creates an image for a particular data from the RRD of the pair (server, metric).
 		 Returns an array with information about the generated image or FALSE on failure. */
-	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $colour)
+	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $colour, $threshold1, $threshold2, $threshold3, $threshold4)
 	{
 		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1 || empty($colour) || !is_string($colour) || $colour[0] != '#' || strlen($colour) != 7)
 			return FALSE;
