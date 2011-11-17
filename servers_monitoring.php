@@ -34,7 +34,6 @@
       $params = explode(" ", $metric->Parameters);
       $plugin_name = explode("_", $params[0]);
 
-      // Executes the plugin for this metric
       for($i = 0; $i < sizeof($params); $i++)
       {
         if($params[$i] == "%IP")
@@ -51,13 +50,9 @@
           $command .= "2>&1";
       }
 
+      // Executes the plugin
       $ret = shell_exec($command);
 
-echo "<br><br>"; 
-for($i = 0; $i < sizeof($params); $i++)
-echo $args[$i] . " ";
-echo "<br>$command";
-echo "<br>$ret<br><br>";
       if($plugin_name[0] == "snmp")
       {
         $ret = explode(" ", $ret);
@@ -68,6 +63,7 @@ echo "<br>$ret<br><br>";
       else
         $value = $ret;
 
+echo "<br>$value<br>";
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
