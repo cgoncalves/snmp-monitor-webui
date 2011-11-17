@@ -26,7 +26,7 @@
 
 <form id="form_287843" class="appnitro" method="post" action="">
 	<div class="form_description">
-		<h2>Servers/Metrics status</h2>
+		<h2>Servers/Metrics Status</h2>
 	</div>
 	<ul>
 		<li id="li_1" >
@@ -111,26 +111,31 @@
 
   function metrics_status($server_id, $result_metrics)
   {
-      echo "<table border='2' cellspacing='1' cellpadding='5'>";
-      //mysql_data_seek($result_metrics, 0);
-
-      while($metric = mysql_fetch_object($result_metrics))
+      if(empty($result_metrics))
+        echo "No metrics associated.";
+      else
       {
-        echo "<tr>";
-        $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
-        $server_metric = mysql_fetch_object($server_metric);
+        echo "<table border='2' cellspacing='1' cellpadding='5'>";
+        //mysql_data_seek($result_metrics, 0);
 
-        echo "<td><a href=\"?p=graphs&sid=$server_id&mid=$metric->Id\">" . $metric->Name . "</a></td>";
-        
-        if(!is_null($server_metric->Status))
-          echo"<td>" . $server_metric->Status ."</td>";
-        else
-          echo "<td>N/A</td>;
+        while($metric = mysql_fetch_object($result_metrics))
+        {
+          echo "<tr>";
+          $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
+          $server_metric = mysql_fetch_object($server_metric);
 
-        </tr>";
+          echo "<td><a href=\"?p=graphs&sid=$server_id&mid=$metric->Id\">" . $metric->Name . "</a></td>";
+          
+          if(!is_null($server_metric->Status))
+            echo"<td>" . $server_metric->Status ."</td>";
+          else
+            echo "<td>N/A</td>;
+
+          </tr>";
+        }
+
+        echo "</table>";
       }
-
-      echo "</table>";
   }
 
 ?>

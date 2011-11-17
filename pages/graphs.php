@@ -32,7 +32,7 @@
 
 <form id="form_287843" class="appnitro" method="post" action="">
 	<div class="form_description">
-		<h2>Servers/Metrics graphs</h2>
+		<h2>Servers/Metrics Graphs</h2>
 	</div>
 	<ul>
 		<li id="li_1" >
