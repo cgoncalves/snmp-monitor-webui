@@ -111,8 +111,8 @@
 
   function metrics_status($server_id, $result_metrics)
   {
-      if(empty($result_metrics))
-        echo "No metrics associated.";
+      if(mysql_num_rows($result_metrics) < 1)
+        echo "<p>No metrics associated.</p>";
       else
       {
         echo "<table border='2' cellspacing='1' cellpadding='5'>";
