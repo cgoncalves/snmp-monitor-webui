@@ -61,9 +61,9 @@
 
 	/* Creates an image for a particular data from the RRD of the pair (server, metric).
 		 Returns an array with information about the generated image or FALSE on failure. */
-	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $colour, $threshold1, $threshold2, $threshold3, $threshold4)
+	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $threshold_max1, $threshold_max2, $threshold_min1, $threshold_min2)
 	{
-		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1 || empty($colour) || !is_string($colour) || $colour[0] != '#' || strlen($colour) != 7)
+		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1)
 			return FALSE;
 
 		$i = 0;
@@ -77,42 +77,43 @@
 		
 		$options[0 + $i] = "--vertical-label=$units";
 		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
-    
-    $i += 2;
-
-    if($threshold1 > -1)
-    {
-      $options[0+$i] = "HRULE:$threshold1#FF0000";
-      $i++;
-    }
-
-    if($threshold2 > -1)
-    {
-        $options[0+$i] = "HRULE:$threshold2#FF0000";
-        $i++;
-    }
-
-    if($threshold3 > -1)
-    {
-        $options[0+$i] = "HRULE:$threshold3#FF0000";
-        $i++;
-    }
-
-    if($threshold4 > -1)
-    {
-        $options[0+$i] = "HRULE:$threshold4#FF0000";
-        $i++;
-    }
-
-		$options[0 + $i] = "LINE2:variable$colour:$metric_name\\r";
-		$options[1 + $i] = "COMMENT:\\r";
+		$options[2 + $i] = "LINE2:variable#32CD32:$metric_name\\l";
 
     if($units == "%")
       $units = "%%";
 
-		$options[2 + $i] = "GPRINT:variable:AVERAGE:Avg $metric_name\: %.2lf %S$units\\r";
-		$options[3 + $i] = "GPRINT:variable:MIN:Min $metric_name\: %.2lf %S$units\\r";
-		$options[4 + $i] = "GPRINT:variable:MAX:Max $metric_name\: %.2lf %S$units\\r";
+    $options[3 + $i] = "COMMENT:\\l";
+		$options[4 + $i] = "GPRINT:variable:LAST:  Last\: %.2lf %S$units";
+		$options[5 + $i] = "GPRINT:variable:AVERAGE:Avg\: %.2lf %S$units\\l";
+		$options[6 + $i] = "GPRINT:variable:MIN:  Min\: %.2lf %S$units";
+		$options[7 + $i] = "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l";
+    $options[8 + $i] = "COMMENT:\\r";
+
+    if($units == "%%")
+      $units = "%";
+
+    if($threshold_max1 > -1)
+    {
+      $options[9 + $i] = "HRULE:$threshold_max1#FF8C00:Threshold Max 1 ($threshold_max1 $units):dashes=8";
+      $i++;
+    }
+
+    if($threshold_max2 > -1)
+    {
+      $options[9 + $i] = "HRULE:$threshold_max2#DC143C:Threshold Max 2 ($threshold_max2 $units)\\l:dashes=8";
+      $i++;
+    }
+
+    if($threshold_min1 > -1)
+    {
+      $options[9 + $i] = "HRULE:$threshold_min1#00B2EE:Threshold Min 1 ($threshold_min1 $units):dashes=8";
+      $i++;
+    }
+
+    if($threshold_min2 > -1)
+    {
+      $options[9 + $i] = "HRULE:$threshold_min2#0000FF:Threshold Min 2  ($threshold_min2 $units)\\l:dashes=8";
+    }
 
 		return rrd_graph(filenameGraph($server_id, $metric_id, $start), $options, count($options));
   } 
