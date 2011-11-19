@@ -115,11 +115,11 @@ CREATE TABLE IF NOT EXISTS `servers_metrics` (
   `Id` int(11) NOT NULL auto_increment,
   `RefIDServer` int(11) NOT NULL,
   `RefIDMetric` int(11) NOT NULL,
-  `Threshold_max1` int(11) NOT NULL,
-  `Threshold_max2` int(11) NOT NULL,
-  `Threshold_min1` int(11) NOT NULL,
-  `Threshold_min2` int(11) NOT NULL,
-  `Status` varchar(255) NOT NULL,
+  `Threshold_max1` int(11),
+  `Threshold_max2` int(11),
+  `Threshold_min1` int(11),
+  `Threshold_min2` int(11),
+  `Status` varchar(255),
   PRIMARY KEY  (`Id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 

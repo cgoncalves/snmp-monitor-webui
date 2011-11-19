@@ -10,7 +10,7 @@
 
       $notification = mysql_fetch_object($notification);
 
-      if( (strcmp($notification->Name, "E-mail")) || (strcmp($notification->Name, "Email")) )
+      if((strcmp($notification->Name, "E-mail")) || (strcmp($notification->Name, "Email")))
       {
         if($metric_name == "Trap")
         {
@@ -22,18 +22,18 @@
           if($oid != -1)
             $message .= "($oid)";
           $message .= " of server \"$server_name\" ($server_ip)";
-          if($value > $threshold_max2)
+          if(!is_null($threshold_max2) && ($value > $threshold_max2))
             $message .= " has exceeded threshold max 2 of $threshold_max2";
-          elseif($value > $threshold_max1)
+          elseif(!is_null($threshold_max1) && ($value > $threshold_max1))
             $message .= " has exceeded threshold max 1 of $threshold_max1";
-          elseif($value < $threshold_min2)
+          elseif(!is_null($threshold_min2) && ($value < $threshold_min2))
             $message .= " is lower than threshold min 2 of $threshold_min2";
-          elseif($value > $threshold_min2)
+          elseif(!is_null($threshold_min1) && ($value > $threshold_min2))
             $message .= " is lower than threshold min 1 of $threshold_min1";
           $message .=  " (value = $value)";
         }
 
-        sendEmail($server_notification->Receiver, "Monitoring Event", "aprocha@ua.pt", $message);
+        sendEmail($server_notification->Receiver, "Monitoring Event", "girs", $message);
       }
     }   
   }
@@ -42,7 +42,6 @@
   {
     if(valid_email($to))
     {
-        $from = "girs";
         $headers = "From: " . $from;
 
         if(!mail($to, $subject, wordwrap($message, 70), $headers))

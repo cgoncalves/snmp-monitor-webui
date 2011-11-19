@@ -76,16 +76,16 @@
         $min1 = $server_metric->Threshold_min1;
         $min2 = $server_metric->Threshold_min2;
 
-        if(($max2 > -1 && $value > $max2) || ($min2 > -1 && $value < $min2) || ($max1 > -1 && $value > $max1) || ($min1 > -1 && $value < $min1))
+        if((!is_null($max2) && $value > $max2) || (!is_null($min2) && $value < $min2) || (!is_null($max1) && $value > $max1) || (!is_null($min1) && $value < $min1))
         {
           // Status is updated to CRITICAL if value exceeds threshold 2 max or is lower than the threshold 2 min
-          if(($max2 > -1 && $value > $max2) || ($min2 > -1 && $value < $min2))
+          if((!is_null($max2) && $value > $max2) || (!is_null($min2) && $value < $min2))
           {
             if($server_metric->Status != "CRITICAL")
               updateStatus($server_metric->Id, "CRITICAL");
           }
           // Status is updated to WARNING if value exceeds threshold 1 max or is lower than the threshold 1 min
-          elseif(($max1 > -1 && $value > $max1) || ($min1 > -1 && $value < $min1))
+          elseif((!is_null($max1) && $value > $max1) || (!is_null($min1) && $value < $min1))
           {
             if($server_metric->Status != "WARNING")
               updateStatus($server_metric->Id, "WARNING");
@@ -122,7 +122,23 @@
   // Adds the event to the eventlogs table of the DB
   function addEventLog($server_id, $metric_id, $oid, $min1, $min2, $max1, $max2, $value)
   {
-    $ret = mysql_query("INSERT INTO eventlogs (RefIDServer, IDMetric, OID, Threshold_min1, Threshold_min2, Threshold_max1, Threshold_max2, Value, Ack) VALUES ('$server_id', '$metric_id', '$oid', '$min1', '$min2', '$max1', '$max2', $value, '0')");
+    $sql_result = mysql_query("SELECT Ack FROM eventlogs WHERE RefIDServer=$server_id AND IDMetric=$metric_id AND OID=$oid AND Threshold_min1=$min1 AND Threshold_min2=$min2 AND Threshold_max1=$max1 AND Threshold_max2=$max2 AND Value=$value");
+   
+    $insert = true;
+
+    if(mysql_num_rows($sql_result) >= 1)
+    {
+      while($result = mysql_fetch_object($sql_result))
+      {
+        if($result->Ack == 0)
+          $insert = false;
+      }
+    } 
+
+    if(insert == true)
+    {
+      $ret = mysql_query("INSERT INTO eventlogs (RefIDServer, IDMetric, OID, Threshold_min1, Threshold_min2, Threshold_max1, Threshold_max2, Value, Ack) VALUES ('$server_id', '$metric_id', '$oid', '$min1', '$min2', '$max1', '$max2', $value, '0')");
+    }
   }
 
 ?>

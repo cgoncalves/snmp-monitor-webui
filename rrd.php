@@ -92,25 +92,25 @@
     if($units == "%%")
       $units = "%";
 
-    if($threshold_max1 > -1)
+    if(!is_null($threshold_max1))
     {
       $options[9 + $i] = "HRULE:$threshold_max1#FF8C00:Threshold Max 1 ($threshold_max1 $units):dashes=8";
       $i++;
     }
 
-    if($threshold_max2 > -1)
+    if(!is_null($threshold_max2))
     {
       $options[9 + $i] = "HRULE:$threshold_max2#DC143C:Threshold Max 2 ($threshold_max2 $units)\\l:dashes=8";
       $i++;
     }
 
-    if($threshold_min1 > -1)
+    if(!is_null($threshold_min1))
     {
       $options[9 + $i] = "HRULE:$threshold_min1#00B2EE:Threshold Min 1 ($threshold_min1 $units):dashes=8";
       $i++;
     }
 
-    if($threshold_min2 > -1)
+    if(!is_null($threshold_min2))
     {
       $options[9 + $i] = "HRULE:$threshold_min2#0000FF:Threshold Min 2  ($threshold_min2 $units)\\l:dashes=8";
     }

@@ -13,8 +13,24 @@ if (!$db_conn) {
 mysql_select_db($db_name, $db_conn);
 
 if (isset($_POST["submit"])) {
+
+  $max1 = $_POST[threshold_max1];
+  if(empty($max1))
+    $max1 = "NULL";
+  $max2 = $_POST[threshold_max2];
+  if(empty($max2))
+    $max2 = "NULL";
+
+  $min1 = $_POST[threshold_min1];
+  if(empty($min1))
+    $min1 = "NULL";
+
+  $min2 = $_POST[threshold_min2];
+  if(empty($min2))
+    $min2 = "NULL";
+
 	$sql = "INSERT INTO servers_metrics (RefIDServer, RefIDMetric, Threshold_max1, Threshold_max2, Threshold_min1, Threshold_min2, Status)
-		VALUES ('$_POST[refidserver]', '$_POST[refidmetric]', '$_POST[threshold_max1]', '$_POST[threshold_max2]', '$_POST[threshold_min1]', '$_POST[threshold_min2]', 'UNKNOWN')";
+		VALUES ('$_POST[refidserver]', '$_POST[refidmetric]', $max1, $max2, $min1, $min2, 'UNKNOWN')";
 
 echo $sql;
 
@@ -31,7 +47,7 @@ echo $sql;
 
 	mysql_close($db_conn);
 
-	header("Location: index.php");
+	header("Location: index.php?max1=$max1");
 }
 
 $sql_servers = "SELECT Id, Name FROM servers";
