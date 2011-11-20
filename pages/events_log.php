@@ -13,7 +13,7 @@
 	  die ('Unable to connect to server: ' . mysql_error());
   }
 
-  $result_events = mysql_query("SELECT Id, RefIDServer, IDMetric, Date, OID, Threshold_min1, Threshold_min2, Threshold_max1, Threshold_max1, Threshold_max2, Value, Ack FROM eventlogs", $db_conn);
+  $result_events = mysql_query("SELECT Id, RefIDServer, IDMetric, Date, OID, Threshold_min1, Threshold_min2, Threshold_max1, Threshold_max1, Threshold_max2, Value, Ack FROM eventlogs ORDER BY Date DESC", $db_conn);
 
   if (!$result_events) {
 	  error_log('Unable to query database server: ' . mysql_error());
