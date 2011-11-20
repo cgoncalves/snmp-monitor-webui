@@ -50,8 +50,8 @@ if (isset($_POST["submit"])) {
 		<li id="li_4" >
 			<label class="description" for="element_4">Unit</label>
 			<div>
-				<input id="metric_unit" name="metric_unit" class="element text medium" type="text" maxlength="10" value=""/> 
-			</div> 
+				<input id="metric_unit" name="metric_unit" class="element text medium" type="text" maxlength="40" value=""/> 
+			</div>
 		</li>
 
 		<li class="buttons">

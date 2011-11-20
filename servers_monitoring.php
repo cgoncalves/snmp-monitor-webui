@@ -63,6 +63,8 @@
       else
         $value = $ret;
 
+echo "$args[0] -> " . $value . "<br>";
+
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
       if(!is_null($value))

@@ -19,7 +19,7 @@
 
   mysql_select_db($db_name, $db_conn);
 
-  $result_servers = mysql_query("SELECT Id, Name FROM servers");
+  $result_servers = mysql_query("SELECT Id, Name FROM servers ORDER BY Name");
   $result_metrics = mysql_query("SELECT Id, Name FROM metrics");
 
 ?>

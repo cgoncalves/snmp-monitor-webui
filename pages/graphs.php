@@ -26,7 +26,7 @@
 
   mysql_select_db($db_name, $db_conn);
 
-  $result_servers = mysql_query("SELECT Id, Name FROM servers");
+  $result_servers = mysql_query("SELECT Id, Name FROM servers ORDER BY Name");
 
 ?>
 
@@ -62,7 +62,8 @@
 				<?php
                                   $result_metrics = mysql_query("SELECT metrics.Id, metrics.Name FROM metrics
                                                                  INNER JOIN servers_metrics AS SM ON SM.RefIDMetric=metrics.Id
-                                                                 WHERE SM.RefIDServer=$server_id"
+                                                                 WHERE SM.RefIDServer=$server_id
+                                                                 ORDER BY metrics.Name"
                                                                );
                                   while ($row = mysql_fetch_object($result_metrics)) {
 					if (isset($_GET['mid']) && $_GET['mid'] == $row->Id)

@@ -50,8 +50,8 @@ echo $sql;
 	header("Location: index.php?max1=$max1");
 }
 
-$sql_servers = "SELECT Id, Name FROM servers";
-$sql_metrics = "SELECT Id, Name FROM metrics";
+$sql_servers = "SELECT Id, Name FROM servers ORDER BY Name";
+$sql_metrics = "SELECT Id, Name FROM metrics ORDER BY Name";
 
 $result_servers = mysql_query($sql_servers);
 $result_metrics = mysql_query($sql_metrics);
