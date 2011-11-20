@@ -7,7 +7,7 @@
   if(!empty($ret))
   {
     $value = explode(" ", $ret);
-    $value = $value[sizeof($value) - 1];
+    $value = $value[sizeof($value) - 2];
   }
 
   echo "$oid $value";

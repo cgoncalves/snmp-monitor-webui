@@ -23,6 +23,6 @@
     $value /= $counter;
   }
 
-  echo "$oid $value $counter";
+  echo "$oid $value";
 
 ?>
