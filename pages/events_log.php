@@ -20,7 +20,10 @@
 	  die ('Unable to query database server');
   }
 
-  echo "<h2>Events log</h1>";
+  echo "<form id=\"form_287843\" class=\"appnitro\" method=\"post\" action=\"\">
+	        <div class=\"form_description\">
+		        <h2>Events log</h2>
+	        </div>";
 
   if(mysql_num_rows($result_events) < 1)
   {
@@ -90,7 +93,7 @@
          echo "</tr>";
       }
     }
-    echo "</table>";
+    echo "</table></form>";
   }
 
   mysql_close($db_conn);

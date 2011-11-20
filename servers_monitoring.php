@@ -58,7 +58,7 @@
         $ret = explode(" ", $ret);
 
         $oid = $ret[0];
-        $value = intval($ret[1]);
+        $value = floatval($ret[1]);
       }
       else
         $value = $ret;

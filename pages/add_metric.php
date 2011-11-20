@@ -23,7 +23,7 @@ if (isset($_POST["submit"])) {
 }
 ?>
 
-<form id="form_287843" class="appnitro"  method="post" action="">
+<form id="form_287843" class="appnitro" method="post" action="">
 	<div class="form_description">
 		<h2>Metric</h2>
 		<p>Add a new metric.</p>

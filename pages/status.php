@@ -47,7 +47,7 @@
       <input id="showAll" class="button_text" type="submit" name="submitAll" value="Show All Servers"/>
 		</li>
 	</ul>
-</form>	
+  <br/>
 
 <?php
   if(isset($_POST["submitAll"]))
@@ -100,6 +100,8 @@
       echo "<p><strong>" . $server->Name . "</strong></p>";
       metrics_status($server->Id, $result_metrics);
     }
+
+    echo "</form>";
   }
 
   function showServer($server_id, $result_metrics)
@@ -110,6 +112,8 @@
     echo "<p><strong>" . $server->Name . "</strong></p>";
 
     metrics_status($server_id, $result_metrics);
+
+    echo "</form>";
   }
 
   function metrics_status($server_id, $result_metrics)

@@ -18,19 +18,30 @@
         }
         else
         {
-          $message = "Metric \"$metric_name\"";
+          $message = "Server \"$server_name\" ($server_ip):\n\n";
+          $message .= "Value of metric \"$metric_name\"";
           if($oid != -1)
-            $message .= "($oid)";
-          $message .= " of server \"$server_name\" ($server_ip)";
+            $message .= " (OID = $oid)";
           if(!is_null($threshold_max2) && ($value > $threshold_max2))
-            $message .= " has exceeded threshold max 2 of $threshold_max2";
+            $message .= " has exceeded Threshold Max 2.";
           elseif(!is_null($threshold_max1) && ($value > $threshold_max1))
-            $message .= " has exceeded threshold max 1 of $threshold_max1";
+            $message .= " has exceeded Threshold Max 1.";
           elseif(!is_null($threshold_min2) && ($value < $threshold_min2))
-            $message .= " is lower than threshold min 2 of $threshold_min2";
-          elseif(!is_null($threshold_min1) && ($value > $threshold_min2))
-            $message .= " is lower than threshold min 1 of $threshold_min1";
-          $message .=  " (value = $value)";
+            $message .= " is lower than Threshold Min 2.";
+          elseif(!is_null($threshold_min1) && ($value > $threshold_min1))
+            $message .= " is lower than Threshold Min 1.";
+
+          $message .=  "\n\nMetric value = $value";
+          $message .=  "\nThreshold value = ";
+
+          if(!is_null($threshold_max2) && ($value > $threshold_max2))
+            $message .= "$threshold_max2";
+          elseif(!is_null($threshold_max1) && ($value > $threshold_max1))
+            $message .= "$threshold_max1";
+          elseif(!is_null($threshold_min2) && ($value < $threshold_min2))
+            $message .= "$threshold_min2";
+          elseif(!is_null($threshold_min1) && ($value > $threshold_min1))
+            $message .= "$threshold_min1";
         }
 
         sendEmail($server_notification->Receiver, "Monitoring Event", "girs", $message);

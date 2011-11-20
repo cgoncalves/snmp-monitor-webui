@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `metrics` (
   `Name` varchar(255) NOT NULL,
   `Parameters` varchar(255) NOT NULL,
   `DataType` varchar(50) NOT NULL,
-  `Unit` varchar(10) NOT NULL,
+  `Unit` varchar(40) NOT NULL,
   PRIMARY KEY  (`Id`),
   UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
