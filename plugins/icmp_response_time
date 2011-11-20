@@ -3,15 +3,16 @@
 
   $count = 5;
   $ret = shell_exec("ping -c $count $argv[1] 2>&1");
-  $avg = -1;
+  
+  $avg = NULL;
 
   if(!empty($ret))
   {
     $results = explode("\n", $ret);
     if (sizeof($results) == $count+6)
     {
-      $avg = explode("/", $results[(sizeof($results)-2)]);
-		  $avg = intval($avg[4]);
+      $avg = explode("/", $results[(sizeof($results) - 2)]);
+		  $avg = floatval($avg[4]) / 1000;
     }
   }
 

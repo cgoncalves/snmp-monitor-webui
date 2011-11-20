@@ -3,17 +3,20 @@
 
   $count = 5;
   $ret = shell_exec("ping -c $count $argv[1] 2>&1");
-  $loss = -1;
+  
+  $loss = NULL;
 
   if(!empty($ret))
   {
     $results = explode("\n", $ret);
 
-    if (sizeof($results) == $count+6)
+    if(sizeof($results) == 6 || sizeof($results) == $count+6)
     {
-      $loss = explode(" ", $results[(sizeof($results)-3)]);
-      $loss = explode("%", $loss[5]);
-      $loss = intval($loss[0]);
+      $results = explode(" ", $results[sizeof($results) - 3]);
+
+      $results = explode("%", $results[5]);
+      if(sizeof($results) >= 1)
+        $loss = $results[0];
     }
   }
 
