@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `IP` varchar(39) NOT NULL,
   `Periodicity` int(11) NOT NULL,
   PRIMARY KEY  (`Id`),
-  UNIQUE KEY `Name` (`Name`),
+  UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
