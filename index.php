@@ -12,8 +12,6 @@ else {
 		$p = 'pages/add_server.php';
 	elseif($p == "add_metric")
 		$p = 'pages/add_metric.php';
-	elseif($p == "add_notification")
-		$p = 'pages/add_notification.php';
 	elseif($p == "add_server_metric")
 		$p = 'pages/add_server_metric.php';
   elseif($p == "add_server_notification")
