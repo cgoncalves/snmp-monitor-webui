@@ -4,15 +4,17 @@
   $oid = "1.3.6.1.2.1.25.3.3.1.2";
   $ret = shell_exec("snmpwalk -v 1 -O Uen -c public $argv[1] $oid 2>&1");
 
+  $value = NULL;
+
   if(!empty($ret))
   {
     $counter = 0;
     $value = 0;
     $results = explode("\n", $ret);
-    
+
     for($i = 0; $i < sizeof($results); $i++)
     {
-      if(!empty($results[$i]) && (substr($results[$i], 0, strlen("Timeout")) != "Timeout"))
+      if(!empty($results[$i]) && (strcasecmp(substr($ret, 0, strlen("Timeout")), "Timeout") != 0))
       {
         $counter++;
         $values = explode(" ", $results[$i]);

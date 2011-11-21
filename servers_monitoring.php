@@ -36,8 +36,10 @@
 
       for($i = 0; $i < sizeof($params); $i++)
       {
-        if($params[$i] == "%IP")
+        if(strcasecmp($params[$i], "%IP") == 0)
           $args[$i] = $server->IP;
+        elseif(strcasecmp(substr($params[$i], 0, strlen("%IP")), "%IP") == 0)
+          $args[$i] = $server->IP . ":" . substr($params[$i], strlen("%IP") * -1);
         else
           $args[$i] = $params[$i];
       }        
@@ -50,20 +52,25 @@
           $command .= "2>&1";
       }
 
+echo $command;
+
       // Executes the plugin
       $ret = shell_exec($command);
 
-      if($plugin_name[0] == "snmp")
+      if(strcasecmp($plugin_name[0], "snmp") == 0)
       {
         $ret = explode(" ", $ret);
 
         $oid = $ret[0];
-        $value = floatval($ret[1]);
+        if($ret[1] != NULL)
+          $value = floatval($ret[1]);
+        else
+          $value = NULL;
       }
       else
         $value = $ret;
 
-echo "$args[0] -> " . $value . "<br>";
+echo " -> " . $oid . " " . $value . "<br>";
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary

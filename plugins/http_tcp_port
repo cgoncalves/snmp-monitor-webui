@@ -10,16 +10,19 @@
   {
     $results = explode("\n", $ret);
     
-    $state = explode(" ", $results[sizeof($results) - 4]);
-    if(sizeof($state) >= 2)
+    if(sizeof($results) == 9)
     {
-      $state = $state[1];
-      if($state == "open")
-        $state_value = 1;
-      elseif($state == "closed")
-        $state_value = 0;
-      else
-        $state_value = 2;
+      $state = explode(" ", $results[sizeof($results) - 4]);
+      if(sizeof($state) >= 2)
+      {
+        $state = $state[1];
+        if(strcasecmp($state, "open") == 0)
+          $state_value = 1;
+        elseif(strcasecmp($state, "closed") == 0)
+          $state_value = 0;
+        else
+          $state_value = 2;
+      }
     }
   }
 

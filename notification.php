@@ -12,7 +12,7 @@
 
       if((strcmp($notification->Name, "E-mail")) || (strcmp($notification->Name, "Email")))
       {
-        if($metric_name == "Trap")
+        if(strcasecmp($metric_name, "Trap") == 0)
         {
 
         }

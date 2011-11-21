@@ -79,7 +79,7 @@
 		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
 		$options[2 + $i] = "LINE2:variable#32CD32:$metric_name\\l";
 
-    if($units == "%")
+    if(strcmp($units, "%") == 0)
       $units = "%%";
 
     $options[3 + $i] = "COMMENT:\\l";
@@ -89,7 +89,7 @@
 		$options[7 + $i] = "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l";
     $options[8 + $i] = "COMMENT:\\r";
 
-    if($units == "%%")
+    if(strcmp($units, "%%") == 0)
       $units = "%";
 
     if(!is_null($threshold_max1))

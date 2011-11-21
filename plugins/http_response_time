@@ -9,14 +9,17 @@
   if(!empty($ret))
   {
     $results = explode("\n", $ret);
-    
-    $latency = explode("(", $results[sizeof($results) - 6]);
-    if(sizeof($latency) >=2)
+        
+    if(sizeof($results) == 9)
     {
-      $latency = explode("s", $latency[1]);
-      if(sizeof($latency) >=1)
+      $latency = explode("(", $results[sizeof($results) - 6]);
+      if(sizeof($latency) >=2)
       {
-        $latency = floatval($latency[0]);
+        $latency = explode("s", $latency[1]);
+        if(sizeof($latency) >=1)
+        {
+          $latency = floatval($latency[0]);
+        }
       }
     }
   }
