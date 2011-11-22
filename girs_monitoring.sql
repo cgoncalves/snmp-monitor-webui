@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `servers_metrics` (
   `Threshold_min1` int(11),
   `Threshold_min2` int(11),
   `Status` varchar(255),
+  `HostAlive` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`Id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 

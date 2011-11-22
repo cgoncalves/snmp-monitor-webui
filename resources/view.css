@@ -889,3 +889,35 @@ ul#list-nav li a:hover {
 background:#a2b3a1;
 color:#000
 }
+
+.clean-neutral{
+border:solid 1px #DEDEDE; 
+background:#EFEFEF;
+color:#222222;
+padding:4px;
+text-align:center;
+}
+
+.clean-warning{
+border:solid 1px #DEDEDE; 
+background:#fcf9ce;
+color:#5d5c4f;
+padding:4px;
+text-align:center;
+}
+
+.clean-error{
+border:solid 1px #DEDEDE; 
+background:#f6cbca;
+color:#d22428;
+padding:4px;
+text-align:center;
+}
+
+.clean-ok{
+border:solid 1px #DEDEDE; 
+background:#cee6c3;
+color:#158a42;
+padding:4px;
+text-align:center;
+}

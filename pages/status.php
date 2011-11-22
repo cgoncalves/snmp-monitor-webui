@@ -125,16 +125,31 @@
         echo "<table border='2' cellspacing='1' cellpadding='5'>";
         //mysql_data_seek($result_metrics, 0);
 
+				$hostalive = true;
         while($metric = mysql_fetch_object($result_metrics))
         {
           echo "<tr>";
-          $server_metric = mysql_query("SELECT Status FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
+          $server_metric = mysql_query("SELECT Status, HostAlive FROM servers_metrics WHERE RefIdServer=$server_id AND RefIdMetric=$metric->Id");
           $server_metric = mysql_fetch_object($server_metric);
 
-          echo "<td><a href=\"?p=graphs&sid=$server_id&mid=$metric->Id\">" . $metric->Name . "</a></td>";
-          
+					if ($server_metric->HostAlive == '1' && $server_metric->Status == "ERROR")
+					{
+						$hostalive = false;
+						$td_class = "clean-error";
+					}
+					elseif ($server_metric->Status == "OK")
+						$td_class = "clean-ok";
+					elseif ($server_metric->Status == "WARNING")
+						$td_class = "clean-warning";
+					elseif ($server_metric->Status == "ERROR" || $server_metric->Status == "CRITICAL")
+						$td_class = "clean-error";
+					else
+						$td_class = "clean-neutral";
+
+          echo "<td class=\"$td_class\"><a href=\"?p=graphs&sid=$server_id&mid=$metric->Id\">" . $metric->Name . "</a></td>";
+
           if(!is_null($server_metric->Status))
-            echo"<td>" . $server_metric->Status ."</td>";
+            echo"<td class=\"$td_class\">" . $server_metric->Status ."</td>";
           else
             echo "<td>N/A</td>;
 
@@ -142,6 +157,9 @@
         }
 
         echo "</table>";
+
+				if (!$hostalive)
+					echo "<br/><li class=\"clean-error\">HOST IS DOWN!</li>";
       }
   }
 

@@ -29,15 +29,13 @@ if (isset($_POST["submit"])) {
   if(empty($min2))
     $min2 = "NULL";
 
-	$sql = "INSERT INTO servers_metrics (RefIDServer, RefIDMetric, Threshold_max1, Threshold_max2, Threshold_min1, Threshold_min2, Status)
-		VALUES ('$_POST[refidserver]', '$_POST[refidmetric]', $max1, $max2, $min1, $min2, 'UNKNOWN')";
-
-echo $sql;
+	$sql = "INSERT INTO servers_metrics (RefIDServer, RefIDMetric, Threshold_max1, Threshold_max2, Threshold_min1, Threshold_min2, Status, HostAlive)
+		VALUES ('$_POST[refidserver]', '$_POST[refidmetric]', $max1, $max2, $min1, $min2, 'UNKNOWN', '$_POST[hostalive]')";
 
 	if (!mysql_query($sql,$db_conn)) {
 		die('Error: ' . mysql_error());
 	}
-  
+
   $metric = mysql_query("SELECT DataType FROM metrics WHERE Id=$_POST[refidmetric]");
   $metric = mysql_fetch_object($metric);
   $server = mysql_query("SELECT Periodicity FROM servers WHERE Id=$_POST[refidserver]");
@@ -108,6 +106,12 @@ $result_metrics = mysql_query($sql_metrics);
 				<input id="threshold_min2" name="threshold_min2" class="element text medium" type="text" maxlength="255" value=""/> 
 			</div> 
 		</li>
+		<li id="li_7" >
+			<label class="description" for="element_4">
+				Host Alive <input type="checkbox" name="hostalive" value="1" />
+			</label>
+		</li>
+
 		<li class="buttons">
 			<input type="hidden" name="form_id" value="287843" />
 			<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit"/>
