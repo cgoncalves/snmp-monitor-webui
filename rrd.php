@@ -38,7 +38,7 @@
 			$options .= "RRA:AVERAGE:0.5:" . $steps_rows[$i][0] . ":" . $steps_rows[$i][1] . " ";
 		}
 		
-		return shell_exec("rrdtool create ". filenameRRD($server_id, $metric_id) . " " . $options . "2>&1");
+		return shell_exec("rrdtool create " . filenameRRD($server_id, $metric_id) . " " . $options . "2>&1");
 	}
 	
 	
@@ -54,7 +54,21 @@
 		
 		$options = "$timestamp:$value";
 
-    return shell_exec("rrdtool update ". filenameRRD($server_id, $metric_id) . " $options 2>&1");
+    $args = escapeshellcmd(filenameRRD($server_id, $metric_id) . " " . $options);
+
+$command = <<<EOD
+rrdtool update $args 
+EOD;
+    
+    $ret = shell_exec($command);
+
+echo $command ."<br>";
+if($ret == false)
+{
+echo "FALSE";
+}
+else
+echo "TRUE";
 	}
 
 
@@ -74,16 +88,6 @@
 		$options .= "--vertical-label=$units ";
 		$options .= "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE ";
 		$options .= "LINE2:variable#32CD32:$metric_name\\l ";
-
-    if(strcmp($units, "%") == 0)
-      $units = "%%";
-
-    $options .= "COMMENT:\\l ";
-		$options .= "GPRINT:variable:LAST:  Last\: %.2lf %S$units ";
-		$options .= "GPRINT:variable:AVERAGE:Avg\: %.2lf %S$units\\l ";
-		$options .= "GPRINT:variable:MIN:  Min\: %.2lf %S$units ";
-		$options .= "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l ";
-    $options .= "COMMENT:\\r ";
 
     if(strcmp($units, "%%") == 0)
       $units = "%";
@@ -108,7 +112,27 @@
       $options .= "HRULE:$threshold_min2#0000FF:Threshold Min 2  ($threshold_min2 $units)\\l:dashes=8 ";
     }
 
-    return shell_exec("rrdtool graph ". filenameGraph($server_id, $metric_id, $start) . " " . $options . "2>&1");
+    if(strcmp($units, "%") == 0)
+      $units = "%%";
+
+    $options .= "COMMENT:\\l ";
+		$options .= "GPRINT:variable:LAST:  Last\: %.2lf %S$units ";
+		$options .= "GPRINT:variable:AVERAGE:Avg\: %.2lf %S$units\\l ";
+		$options .= "GPRINT:variable:MIN:  Min\: %.2lf %S$units ";
+		$options .= "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l ";
+    $options .= "COMMENT:\\r ";
+
+    $command = "rrdtool graph ". escapeshellarg(filenameGraph($server_id, $metric_id, $start)) . " " . escapeshellarg($options);
+    
+    $ret = shell_exec($command . "2>&1");
+
+echo "<br><br>$command<br><br>";
+if($ret == false)
+{
+echo "FALSE";
+}
+else
+echo "TRUE";
   } 
 	
 	function filenameRRD($server_id, $metric_id)

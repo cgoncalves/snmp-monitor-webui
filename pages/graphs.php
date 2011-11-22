@@ -98,8 +98,6 @@
 
   mysql_close($db_conn);
 
-
-
   graphRRD($server_id, $metric_id, $metric->Name, "-1h", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
   graphRRD($server_id, $metric_id, $metric->Name, "-1d", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
   graphRRD($server_id, $metric_id, $metric->Name, "-1w", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
