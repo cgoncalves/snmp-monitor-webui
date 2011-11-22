@@ -7,10 +7,11 @@
 		if(is_null($server_id) || intval($server_id) < 1 || is_null($metric_id) || intval($metric_id) < 1 || empty($data_type) || !is_string($data_type))
 			return FALSE;
 
-    $options = "";
-
 		if(!empty($step_value))
-			$options .= "--step $step_value ";
+		{
+			$options[0] = "--step";
+			$options[1] = $step_value;
+		}
 		else
       $step_value = 300;  // default step is 300 seconds (5 min)
 
@@ -18,7 +19,7 @@
 		$heartbeat = intval($step_value) * 2;	
 		
 		// Data Source (min and max Unknown)	
-		$options .= "DS:metric:$data_type:$heartbeat:U:U ";
+		$options[2] = "DS:metric:$data_type:$heartbeat:U:U";
 		
 		// Steps and rows for RRA's of 1 hour, 1 day, 1 month and 1 year
 		$steps_1h = 1;
@@ -35,10 +36,10 @@
 		// Round Robin Archives (CF = AVERAGE, xff = 0.5, steps and rows dfined in array $steps_rows)
 		for($i = 0; $i < sizeof($steps_rows); $i++)
 		{
-			$options .= "RRA:AVERAGE:0.5:" . $steps_rows[$i][0] . ":" . $steps_rows[$i][1] . " ";
+			$options[$i + 3] = "RRA:AVERAGE:0.5:" . $steps_rows[$i][0] . ":" . $steps_rows[$i][1];
 		}
 		
-		return shell_exec("rrdtool create " . filenameRRD($server_id, $metric_id) . " " . $options . "2>&1");
+		return rrd_create(filenameRRD($server_id, $metric_id), $options, count($options));
 	}
 	
 	
@@ -53,22 +54,8 @@
 			$timestamp = "N"; 		// N -> current time
 		
 		$options = "$timestamp:$value";
-
-    $args = escapeshellcmd(filenameRRD($server_id, $metric_id) . " " . $options);
-
-$command = <<<EOD
-rrdtool update $args 
-EOD;
-    
-    $ret = shell_exec($command);
-
-echo $command ."<br>";
-if($ret == false)
-{
-echo "FALSE";
-}
-else
-echo "TRUE";
+		
+		return rrd_update(filenameRRD($server_id, $metric_id), $options);
 	}
 
 
@@ -80,59 +67,55 @@ echo "TRUE";
 			return FALSE;
 
 		$i = 0;
-    $options = "";
 		
 		if(!is_null($start))
-			$options .= "--start $start ";
+		{
+			$options[0] = "--start";
+			$options[1] = $start;
+			$i = 2;
+		}
 		
-		$options .= "--vertical-label=$units ";
-		$options .= "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE ";
-		$options .= "LINE2:variable#32CD32:$metric_name\\l ";
+		$options[0 + $i] = "--vertical-label=$units";
+		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
+		$options[2 + $i] = "LINE2:variable#32CD32:$metric_name\\l";
+
+    if(strcmp($units, "%") == 0)
+      $units = "%%";
+
+    $options[3 + $i] = "COMMENT:\\l";
+		$options[4 + $i] = "GPRINT:variable:LAST:  Last\: %.2lf %S$units";
+		$options[5 + $i] = "GPRINT:variable:AVERAGE:Avg\: %.2lf %S$units\\l";
+		$options[6 + $i] = "GPRINT:variable:MIN:  Min\: %.2lf %S$units";
+		$options[7 + $i] = "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l";
+    $options[8 + $i] = "COMMENT:\\r";
 
     if(strcmp($units, "%%") == 0)
       $units = "%";
 
     if(!is_null($threshold_max1))
     {
-      $options .= "HRULE:$threshold_max1#FF8C00:Threshold Max 1 ($threshold_max1 $units):dashes=8 ";
+      $options[9 + $i] = "HRULE:$threshold_max1#FF8C00:Threshold Max 1 ($threshold_max1 $units):dashes=8";
+      $i++;
     }
 
     if(!is_null($threshold_max2))
     {
-      $options .= "HRULE:$threshold_max2#DC143C:Threshold Max 2 ($threshold_max2 $units)\\l:dashes=8 ";
+      $options[9 + $i] = "HRULE:$threshold_max2#DC143C:Threshold Max 2 ($threshold_max2 $units)\\l:dashes=8";
+      $i++;
     }
 
     if(!is_null($threshold_min1))
     {
-      $options .= "HRULE:$threshold_min1#00B2EE:Threshold Min 1 ($threshold_min1 $units):dashes=8 ";
+      $options[9 + $i] = "HRULE:$threshold_min1#00B2EE:Threshold Min 1 ($threshold_min1 $units):dashes=8";
+      $i++;
     }
 
     if(!is_null($threshold_min2))
     {
-      $options .= "HRULE:$threshold_min2#0000FF:Threshold Min 2  ($threshold_min2 $units)\\l:dashes=8 ";
+      $options[9 + $i] = "HRULE:$threshold_min2#0000FF:Threshold Min 2  ($threshold_min2 $units)\\l:dashes=8";
     }
 
-    if(strcmp($units, "%") == 0)
-      $units = "%%";
-
-    $options .= "COMMENT:\\l ";
-		$options .= "GPRINT:variable:LAST:  Last\: %.2lf %S$units ";
-		$options .= "GPRINT:variable:AVERAGE:Avg\: %.2lf %S$units\\l ";
-		$options .= "GPRINT:variable:MIN:  Min\: %.2lf %S$units ";
-		$options .= "GPRINT:variable:MAX:Max\: %.2lf %S$units\\l ";
-    $options .= "COMMENT:\\r ";
-
-    $command = "rrdtool graph ". escapeshellarg(filenameGraph($server_id, $metric_id, $start)) . " " . escapeshellarg($options);
-    
-    $ret = shell_exec($command . "2>&1");
-
-echo "<br><br>$command<br><br>";
-if($ret == false)
-{
-echo "FALSE";
-}
-else
-echo "TRUE";
+		return rrd_graph(filenameGraph($server_id, $metric_id, $start), $options, count($options));
   } 
 	
 	function filenameRRD($server_id, $metric_id)
