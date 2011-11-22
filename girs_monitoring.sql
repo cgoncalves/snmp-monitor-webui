@@ -72,6 +72,8 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+INSERT INTO `notifications` (`Id`, `Name`) VALUES (1, 'Email');
+
 -- --------------------------------------------------------
 
 --
