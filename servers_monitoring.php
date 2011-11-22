@@ -52,8 +52,6 @@
           $command .= "2>&1";
       }
 
-echo $command;
-
       // Executes the plugin
       $ret = shell_exec($command);
 
@@ -69,8 +67,6 @@ echo $command;
       }
       else
         $value = $ret;
-
-echo " -> " . $oid . " " . $value . "<br>";
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
