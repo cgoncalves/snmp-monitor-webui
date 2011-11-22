@@ -67,7 +67,12 @@ foreach (scandir($plugins_dir) as $filename)
 		<li id="li_3" >
 			<label class="description" for="element_3">RRD Data Type</label>
 			<div>
-				<input id="metric_datatype" name="metric_datatype" class="element text medium" type="text" maxlength="50" value=""/> 
+				<select name="metric_datatype">
+					<option value="ABSOLUTE">ABSOLUTE</option>
+					<option value="COUNTER">COUNTER</option>
+					<option value="DERIVE">DERIVE</option>
+					<option value="GAUGE">GAUGE</option>
+				</select>
 			</div> 
 		</li>
 		<li id="li_4" >
