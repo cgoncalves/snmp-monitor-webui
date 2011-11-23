@@ -2,25 +2,18 @@
 <?php
 
   $port = 80;
-  $ret = shell_exec("nmap -p $port $argv[1] 2>&1");
+  $ret = shell_exec("nmap -n -p $port $argv[1] 2>&1");
 
   $latency = NULL;
 
   if(!empty($ret))
   {
     $results = explode("\n", $ret);
-        
-    if(sizeof($results) == 9)
+
+    if(sizeof($results) == 8)
     {
-      $latency = explode("(", $results[sizeof($results) - 6]);
-      if(sizeof($latency) >=2)
-      {
-        $latency = explode("s", $latency[1]);
-        if(sizeof($latency) >=1)
-        {
-          $latency = floatval($latency[0]);
-        }
-      }
+      $latency = explode(" ", $results[sizeof($results)-2]);
+			$latency = floatval($latency[10]);
     }
   }
 
