@@ -1,9 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-echo sizeof($argv) . "\n";
-
-
   $oid = "1.3.6.1.2.1.2.2.1.10.$argv[3]";
 
   if(empty($argv[1]))
@@ -19,6 +16,9 @@ echo sizeof($argv) . "\n";
   {
     $value = explode(" ", $ret);
     $value = $value[sizeof($value) - 1];
+
+    if(strcmp($value, "()\n") == 0)
+      $value = null;
   }
 
   echo "$oid $value";

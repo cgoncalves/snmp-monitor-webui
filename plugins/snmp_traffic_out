@@ -16,6 +16,9 @@
   {
     $value = explode(" ", $ret);
     $value = $value[sizeof($value) - 1];
+
+    if(strcmp($value, "()\n") == 0)
+      $value = null;
   }
 
   echo "$oid $value";

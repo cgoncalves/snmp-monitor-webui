@@ -27,7 +27,7 @@
     $units = $units[sizeof($units) - 1];
   }
 
-  if(!is_null($used) && !is_null($units))
+  if(!is_null($used) && (strcmp($used, "()\n") != 0) && !is_null($units) && (strcmp($units, "()\n") != 0))
     $value = intval($used) * intval($units);
 
   echo "-1 $value";
