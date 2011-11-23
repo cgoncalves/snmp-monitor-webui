@@ -11,8 +11,10 @@ if (isset($_POST["submit"])) {
 
 	mysql_select_db($db_name, $db_conn);
 
+	//$sql="INSERT INTO servers (Name, IP, Periodicity) VALUES
+	//	('$_POST[server_name]', '$_POST[server_ip]', $_POST[server_periodicity])";
 	$sql="INSERT INTO servers (Name, IP, Periodicity) VALUES
-		('$_POST[server_name]', '$_POST[server_ip]', $_POST[server_periodicity])";
+		('$_POST[server_name]', '$_POST[server_ip]', 300)";
 
 	if (!mysql_query($sql,$db_conn)) {
 		die('Error: ' . mysql_error());
