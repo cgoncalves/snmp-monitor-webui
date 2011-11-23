@@ -133,10 +133,10 @@ CREATE TABLE IF NOT EXISTS `servers_metrics` (
 
 DROP TABLE IF EXISTS `servers_notifications`;
 CREATE TABLE IF NOT EXISTS `servers_notifications` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL auto_increment,
   `RefIDServer` int(11) NOT NULL,
   `RefIDNotification` int(11) NOT NULL,
   `Receiver` varchar(255) NOT NULL,
   PRIMARY KEY  (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
