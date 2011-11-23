@@ -45,7 +45,7 @@ if (isset($_POST["submit"])) {
 
 	mysql_close($db_conn);
 
-	header("Location: index.php?max1=$max1");
+	header("Location: index.php");
 }
 
 $sql_servers = "SELECT Id, Name FROM servers ORDER BY Name";
