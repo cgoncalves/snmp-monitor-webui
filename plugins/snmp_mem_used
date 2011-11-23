@@ -11,6 +11,8 @@
   $ret = shell_exec("snmpget -O Uen -v 1 -c $community $argv[2] $oid 2>&1");
 
   $value = NULL;
+  $total = NULL;
+  $avail = NULL;
 
   if(!empty($ret) && (strcasecmp(substr($ret, 0, strlen("Timeout")), "Timeout") != 0))
   {

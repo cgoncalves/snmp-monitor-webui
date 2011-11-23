@@ -12,13 +12,10 @@
 
   $value = NULL;
 
-  if(!empty($ret) && (strcasecmp(substr($ret, 0, strlen("Timeout")), "Timeout") != 0))
+  if(!empty($ret) && (strcasecmp(substr($ret, 0, strlen("Timeout")), "Timeout") != 0) && (preg_match("/Unknown Object Identifier/", $ret) == 0))
   {
     $value = explode(" ", $ret);
     $value = $value[sizeof($value) - 1];
-
-    if(strcmp($value, "()\n") == 0)
-      $value = null;
   }
 
   echo "$oid $value";
