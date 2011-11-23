@@ -26,25 +26,38 @@
 
     // For all metrics of the server
 	  while ($server_metric = mysql_fetch_object($server_metrics)) {
-      
       $metric = mysql_query("SELECT Id, Name, Parameters FROM metrics WHERE Id=$server_metric->RefIDMetric");
       $metric = mysql_fetch_object($metric);
 
       // Gets the parameters for this metric
-      $params = explode(" ", $metric->Parameters);
-      $plugin_name = explode("_", $params[0]);
 
+      $params = explode(" ", $metric->Parameters);
+
+      $n = 0;
       for($i = 0; $i < sizeof($params); $i++)
       {
-        if(strcasecmp($params[$i], "%IP") == 0)
-          $args[$i] = $server->IP;
-        elseif(strcasecmp(substr($params[$i], 0, strlen("%IP")), "%IP") == 0)
-          $args[$i] = $server->IP . ":" . substr($params[$i], strlen("%IP") * -1);
-        else
-          $args[$i] = $params[$i];
-      }        
+        if((strcasecmp(substr($params[0], 0, strlen("snmp")), "snmp") == 0) && ($i == 1))
+        {
+          if(strcasecmp(substr($params[$i], 0, strlen("%IP")), "%IP") != 0)
+            $args[$n] = $params[$i];
+          else
+          {
+            $args[$n] = "public";
+            $n++;
+          }
+        }
 
-      $command = "$plugins_dir" . $args[0] . " ";
+        if(strcasecmp($params[$i], "%IP") == 0)
+          $args[$n] = $server->IP;
+        elseif(strcasecmp(substr($params[$i], 0, strlen("%IP")), "%IP") == 0)
+          $args[$n] = $server->IP . ":" . substr($params[$i], strlen("%IP") * -1);
+        else
+          $args[$n] = $params[$i];
+
+        $n++;
+      }
+
+      $command = $plugins_dir . $args[0] . " ";
       for($i = 1; $i < sizeof($args); $i++)
       { 
         $command .= $args[$i] . " ";
@@ -55,7 +68,7 @@
       // Executes the plugin
       $ret = shell_exec($command);
 
-      if(strcasecmp($plugin_name[0], "snmp") == 0)
+      if(strcasecmp(substr($params[0], 0, strlen("snmp")), "snmp") == 0)
       {
         $ret = explode(" ", $ret);
 
@@ -67,6 +80,8 @@
       }
       else
         $value = $ret;
+
+echo $command . "<br>" . $value . "<br><br>";
 
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary

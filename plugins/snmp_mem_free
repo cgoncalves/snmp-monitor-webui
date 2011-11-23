@@ -2,7 +2,13 @@
 <?php
 
   $oid = "1.3.6.1.4.1.2021.4.6.0";
-  $ret = shell_exec("snmpget -O Uen -v 1 -c public $argv[1] $oid 2>&1");
+
+  if(empty($argv[1]))
+    $community = "public";
+  else
+    $community = $argv[1];
+
+  $ret = shell_exec("snmpget -O Uen -v 1 -c $community $argv[2] $oid 2>&1");
 
   $value = NULL;
 
