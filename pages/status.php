@@ -78,7 +78,8 @@
 
     $result_metrics = mysql_query("SELECT metrics.Id, metrics.Name FROM metrics
                                    INNER JOIN servers_metrics AS SM ON SM.RefIDMetric=metrics.Id
-                                   WHERE SM.RefIDServer=$server_id"
+                                   WHERE SM.RefIDServer=$server_id
+                                   ORDER BY metrics.name"
                                  );
 
     showServer($server_id, $result_metrics);

@@ -41,12 +41,13 @@ if (isset($_POST["submit"])) {
 				<input id="server_ip" name="server_ip" class="element text medium" type="text" maxlength="255" value=""/> 
 			</div> 
 		</li>
-		<li id="li_3" >
+<!--		<li id="li_3" >
 			<label class="description" for="element_3">Periodicity (seconds) </label>
 			<div>
 				<input id="server_periodicity" name="server_periodicity" class="element text medium" type="text" maxlength="255" value=""/> 
 			</div> 
 		</li>
+-->
 		<li class="buttons">
 			<input type="hidden" name="form_id" value="287843" />
 			<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />

@@ -81,8 +81,6 @@
       else
         $value = $ret;
 
-echo $command . "<br>" . $value . "<br><br>";
-
       // Updates the RRD with the value returned by the plugin
       // and checks the thresholds, updating the status if necessary
       if(!is_null($value))

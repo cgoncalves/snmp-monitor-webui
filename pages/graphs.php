@@ -1,4 +1,4 @@
-<META HTTP-EQUIV=Refresh CONTENT="300">
+, <META HTTP-EQUIV=Refresh CONTENT="300">
 
 <script>
   function selectOnclickServer(form)
@@ -96,14 +96,18 @@
   $server_metric = mysql_query("SELECT Threshold_max1, Threshold_max2, Threshold_min1, Threshold_min2 FROM servers_metrics WHERE RefIDServer=$server_id AND RefIDMetric=$metric_id");
   $server_metric = mysql_fetch_object($server_metric);
 
+
+  $result_server = mysql_query("SELECT Periodicity FROM servers WHERE Id=$server_id");
+  $server = mysql_fetch_object($result_server);
+
   mysql_close($db_conn);
 
+  $value = $server->Periodicity;
 
-
-  graphRRD($server_id, $metric_id, $metric->Name, "-1h", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
-  graphRRD($server_id, $metric_id, $metric->Name, "-1d", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
-  graphRRD($server_id, $metric_id, $metric->Name, "-1w", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
-  graphRRD($server_id, $metric_id, $metric->Name, "-1m", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2);
+  graphRRD($server_id, $metric_id, $metric->Name, "-1h", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $value);
+  graphRRD($server_id, $metric_id, $metric->Name, "-1d", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $value);
+  graphRRD($server_id, $metric_id, $metric->Name, "-1w", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $value);
+  graphRRD($server_id, $metric_id, $metric->Name, "-1m", $metric->Unit, $server_metric->Threshold_max1, $server_metric->Threshold_max2, $server_metric->Threshold_min1, $server_metric->Threshold_min2, $value);
 ?>
 
 <div style="text-align:center;">

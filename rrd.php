@@ -61,7 +61,7 @@
 
 	/* Creates an image for a particular data from the RRD of the pair (server, metric).
 		 Returns an array with information about the generated image or FALSE on failure. */
-	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $threshold_max1, $threshold_max2, $threshold_min1, $threshold_min2)
+	function graphRRD($server_id, $metric_id, $metric_name, $start, $units, $threshold_max1, $threshold_max2, $threshold_min1, $threshold_min2, $step_value)
 	{
 		if(is_null($server_id) || $server_id < 1 || is_null($metric_id) || $metric_id < 1)
 			return FALSE;
@@ -75,8 +75,10 @@
 			$i = 2;
 		}
 		
+echo $step_value."<br>";
+
 		$options[0 + $i] = "--vertical-label=$units";
-		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE";
+		$options[1 + $i] = "DEF:variable=" . filenameRRD($server_id, $metric_id, $start) . ":metric:AVERAGE:step=$step_value";
 		$options[2 + $i] = "LINE2:variable#32CD32:$metric_name\\l";
 
     if(strcmp($units, "%") == 0)
